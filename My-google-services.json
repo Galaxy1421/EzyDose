@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "988174934427",
+    "project_id": "reminders-5bb06",
+    "storage_bucket": "reminders-5bb06.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988174934427:android:5268bf00615bfcbf0b413e",
+        "android_client_info": {
+          "package_name": "com.example2.reminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "988174934427-484i1fvoj881luv21sh14o60qp0inbs4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example2.reminder",
+            "certificate_hash": "853827193ce03c178cf4d6c0b2d98eb01980a85b"
+          }
+        },
+        {
+          "client_id": "988174934427-j0oo3knf80ka6l9boijin7f97d4kfckc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFjhE4ymCp9Af3H-MISC6E8-I-BQuNVWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "988174934427-j0oo3knf80ka6l9boijin7f97d4kfckc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

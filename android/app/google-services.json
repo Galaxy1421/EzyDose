@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "69087600407",
+    "project_id": "dose-3812e",
+    "storage_bucket": "dose-3812e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69087600407:android:9d2f67cb08b2ef8e1da152",
+        "android_client_info": {
+          "package_name": "com.example.reminder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzzZpptsbfoJ6Btms17Pid2KCwq6LRX0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
