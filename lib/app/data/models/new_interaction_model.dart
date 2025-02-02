@@ -120,7 +120,12 @@ class NewInteractionChecker {
         final timingGap2 = _parseTimingGap(newMedicationData.timingGap2);
 
         // حساب الفرق الزمني بين التذكير الجديد والتذكير السابق
-        final timeDifference = newReminder.dateTime.difference(existingReminder.dateTime).inMinutes.abs();
+        // final timeDifference = newReminder.dateTime.difference(existingReminder.dateTime).inMinutes.abs();
+// ضبط التاريخ إلى نفس اليوم لتجنب أخطاء الفارق الزمني
+        DateTime newTime = DateTime(0, 0, 0, newReminder.dateTime.hour, newReminder.dateTime.minute);
+        DateTime existingTime = DateTime(0, 0, 0, existingReminder.dateTime.hour, existingReminder.dateTime.minute);
+
+        final timeDifference = newTime.difference(existingTime).inMinutes.abs();
 
         // طباعة الفرق الزمني للتصحيح
         print('Time Difference: $timeDifference minutes');
@@ -234,7 +239,12 @@ class NewInteractionChecker {
         final timingGap2 = _parseTimingGap(newMedicationData.timingGap2);
 
         // حساب الفرق الزمني بين التذكير الجديد والتذكير السابق
-        final timeDifference = newReminder.dateTime.difference(existingReminder.dateTime).inMinutes.abs();
+        // final timeDifference = newReminder.dateTime.difference(existingReminder.dateTime).inMinutes.abs();
+       // ضبط التاريخ إلى نفس اليوم لتجنب أخطاء الفارق الزمني
+        DateTime newTime = DateTime(0, 0, 0, newReminder.dateTime.hour, newReminder.dateTime.minute);
+        DateTime existingTime = DateTime(0, 0, 0, existingReminder.dateTime.hour, existingReminder.dateTime.minute);
+
+        final timeDifference = newTime.difference(existingTime).inMinutes.abs();
 
         print('Time Difference: $timeDifference minutes');
 

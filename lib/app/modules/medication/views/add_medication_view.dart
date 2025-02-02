@@ -1530,9 +1530,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             }
 
             final newInteractionService = Get.find<NewInteractionService>();
-            // final schedule = newInteractionService.findOptimalSchedule(
-            //   [controller.toMedication(), ...controller.existingMedications],
-            // );
+          
   controller.medicationsSchedule= newInteractionService.findOptimalSchedule(controller.reminders,controller.listFetchAllReminders??[]);
   final schedule = controller.medicationsSchedule??{};
 // final schedule = newInteractionService.findOptimalSchedule(controller.reminders,controller.listFetchAllReminders!);

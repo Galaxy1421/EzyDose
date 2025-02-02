@@ -274,7 +274,7 @@ class NewInteractionService extends GetxService {
         final edge = edges[at]!;
         edge.flow += minFlow.toInt();
         edge.residual!.flow -= minFlow.toInt();
-       print("Flow applied: ${edge.from} -> ${edge.to}, Flow: ${edge.flow}");
+        print("Flow applied: ${edge.from} -> ${edge.to}, Flow: ${edge.flow}");
       }
     }
   }
