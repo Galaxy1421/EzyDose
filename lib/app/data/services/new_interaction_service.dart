@@ -21,18 +21,18 @@ class FlowEdge {
 /// Node in the flow network representing a medication
 class FlowNode {
   final int id;
-  // final String medicationName;
   final ReminderModel reminder;
   final List<FlowEdge> edges;
 
   FlowNode(this.id, this.reminder) : edges = [];
 }
+
+
 class NewInteractionService extends GetxService {
   final logger = Logger();
 
   /// Implements minimum cost flow algorithm for medication interactions
-  /// Returns optimal scheduling considering interaction risks
-  ///
+  /// Returns optimal scheduling considering interaction risk
 
   Map<String, List<ReminderModel>> _groupRemindersByMedication(List<ReminderModel> reminders) {
     final groupedReminders = <String, List<ReminderModel>>{};
@@ -72,7 +72,6 @@ class NewInteractionService extends GetxService {
 
 // إنشاء العقد للتذكيرات الحالية
     for (var entry in groupedExistingReminders.entries) {
-      // final medicationName = entry.key;
       final reminders = entry.value;
       final medicationName = reminders.first.medicationName?? reminders.first.medicineModelDataSet!.tradeName;
 
@@ -102,9 +101,11 @@ class NewInteractionService extends GetxService {
               node.edges.add(edge);
               targetNode.edges.add(residual);
               addedEdges.add(edgeKey);
+              print("\n➕ EDGE ADDED: ${node.reminder.medicineModelDataSet!.tradeName} ↔ ${targetNode.reminder.medicineModelDataSet!.tradeName}");
+              print("   Total Cost: $cost | Type: ${_getInteractionType(cost)}");
 
-              print(
-                  "Edge added: ${node.reminder.medicineModelDataSet!.tradeName} -> ${targetNode.reminder.medicineModelDataSet!.tradeName}, Cost: $cost");
+            //  print(
+                  //"Edge added: ${node.reminder.medicineModelDataSet!.tradeName} -> ${targetNode.reminder.medicineModelDataSet!.tradeName}, Cost: $cost");
             }
           }
         }
@@ -122,7 +123,9 @@ class NewInteractionService extends GetxService {
         96, // 24 hours * 4 (15-minute intervals)
             (i) => DateTime.now().add(Duration(minutes: i * 15)));
     print("Time slots initialized successfully: ${timeSlots.length} slots created.");
+    final occupiedSlots = <int>{}; // لتتبع الفترات المستخدمة
 
+    
     // تشغيل خوارزمية تدفق التكلفة الدنيا
     _minimumCostFlow(nodes);
 
@@ -130,30 +133,31 @@ class NewInteractionService extends GetxService {
     for (var node in nodes) {
       final medicationName = node.reminder.medicineModelDataSet?.tradeName ?? "Unknown Medication";
       schedule[medicationName] = [];//
-      for (var edge in node.edges) {
-        if (edge.flow > 0) {
-          // حساب الفترات الزمنية بناءً على التدفق
-          final slotIndex = edge.to % timeSlots.length;
-          final timeSlot = timeSlots[slotIndex];
-          schedule[medicationName]!.add(timeSlot);
-
-          print("Scheduled time for $medicationName: $timeSlot");
+      int minInterval = _calculateMinInterval(node); 
+      int SafeTimes = 6;
+      int addedSafeTimes = 0;
+      
+      for (int i = 0; i < timeSlots.length && addedSafeTimes < SafeTimes; i++) {
+        bool isSlotSafe = occupiedSlots.every((occupied) => (i - occupied).abs() >= minInterval ~/ 15);
+        if (isSlotSafe) {
+          schedule[medicationName]!.add(timeSlots[i]);
+          occupiedSlots.add(i);
+          addedSafeTimes++;
         }
       }
+    
     }
-    for (var node in nodes) {
-      if (schedule[node.reminder.medicineModelDataSet!.tradeName]!.isEmpty) {
-        final slotIndex = node.id % timeSlots.length;
-        schedule[node.reminder.medicineModelDataSet!.tradeName]!.add(timeSlots[slotIndex]);
-        print("Default time assigned for ${node.reminder.medicineModelDataSet!.tradeName}: ${timeSlots[slotIndex]}");
-      }
-    }
-
     print("Scheduling process completed.\n\n\n ======================================");
+    // بعد إنشاء الجدول
+    print("\n\n📅 FINAL SCHEDULE:");
+    schedule.forEach((med, times) {
+    print("💊 $med:");
+    times.forEach((time) {
+    print("   - ${time.hour}:${time.minute.toString().padLeft(2, '0')}");
+  });
+});
     return schedule;
   }
-
-
 
   /// Implements the minimum cost flow algorithm using successive shortest paths
   void _minimumCostFlow(List<FlowNode> nodes) {
@@ -206,36 +210,74 @@ class NewInteractionService extends GetxService {
       }
     }
   }
-
   int _calculateInteractionCost(MedicineModelDataSet? newMedication, MedicineModelDataSet existingMedication) {
-    final newAtcCode1 = newMedication?.atcCode1;
+  final newAtcCode1 = newMedication?.atcCode1;
+  final existingName = existingMedication.tradeName;
 
-    // التحقق من وجود كود ATC للدواء الجديد في أعمدة Major, Moderate, Minor
-    if (newAtcCode1 != null) {
-      if (existingMedication.major != null && existingMedication.major!.contains(newAtcCode1)) {
-        return 1000; // تكلفة تفاعل خطير
-      } else if (existingMedication.moderate != null && existingMedication.moderate!.contains(newAtcCode1)) {
-        return 500; // تكلفة تفاعل متوسط
-      } else if (existingMedication.minor != null && existingMedication.minor!.contains(newAtcCode1)) {
-        return 100; // تكلفة تفاعل طفيف
+  if (newAtcCode1 == null) {
+    print("⚠️ No ATC code found for new medication: ${newMedication?.tradeName}");
+    return 0;
+  }
+
+  print("\n🔍 Checking interactions between: ");
+  print("   New: ${newMedication!.tradeName} (ATC: $newAtcCode1)");
+  print("   Existing: $existingName (ATC: ${existingMedication.atcCode1})");
+
+  if (existingMedication.major?.contains(newAtcCode1) ?? false) {
+    print("🚨 MAJOR INTERACTION DETECTED! (Cost: 1000)");
+    return 1000;
+  } else if (existingMedication.moderate?.contains(newAtcCode1) ?? false) {
+    print("⚠️ MODERATE INTERACTION DETECTED (Cost: 500)");
+    return 500;
+  } else if (existingMedication.minor?.contains(newAtcCode1) ?? false) {
+    print("ℹ️ MINOR INTERACTION DETECTED (Cost: 100)");
+    return 100;
+  }
+
+  print("✅ No interaction found");
+  return 0;
+}
+
+
+String _getInteractionType(int cost) {
+  switch (cost) {
+    case 1000:
+      return 'MAJOR';
+    case 500:
+      return 'MODERATE';
+    case 100:
+      return 'MINOR';
+    default:
+      return 'NONE';
+  }
+}
+
+int _getRequiredInterval(String interactionType) {
+  switch (interactionType) {
+    case 'MAJOR':
+      return 180; // 180 دقيقة
+    case 'MODERATE':
+      return 90 ; // 90 دقيقة
+    case 'MINOR':
+      return 60; // 60 دقيقة
+    default:
+      return 0;
+  }
+}
+
+int _calculateMinInterval(FlowNode node) {
+  int maxInterval = 0;
+  for (var edge in node.edges) {
+    if (edge.cost > 0) {
+      String interactionType = _getInteractionType(edge.cost);
+      int requiredInterval = _getRequiredInterval(interactionType);
+      if (requiredInterval > maxInterval) {
+        maxInterval = requiredInterval;
       }
     }
-
-    return 0; // لا يوجد تفاعل
   }
-
-  /// Calculates interaction cost based on risk level
-  int _calculateInteractionCost2(String interactionType) {
-    final cost = switch (interactionType) {
-      'Major' => 1000,
-      'Moderate' => 500,
-      'Minor' => 100,
-      _ => 0, // No Interaction
-    };
-    logger.d("Interaction cost calculated for type $interactionType: $cost");
-    return cost;
-  }
-
+  return maxInterval;
+}
   @override
   Future<NewInteractionService> init() async {
     logger.i("NewInteractionService initialized.");

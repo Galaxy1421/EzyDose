@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:reminder/app/data/data_resources/remote_reminder_data_source.dart';
+import 'package:reminder/app/data/services/new_interaction_service.dart';
 import 'package:reminder/app/services/custom_interaction_service.dart';
 import 'package:uuid/uuid.dart';
 import 'app/data/services/interaction_service.dart';
@@ -83,7 +84,7 @@ Future<void> initServices() async {
 
     // Get.put(NotificationService());
     // Get.put(RoutineService());
-    Get.put(InteractionService());
+    Get.put(NewInteractionService());
     // Get.put(ReminderService());
     // Get.put(AddMedicationController());
 

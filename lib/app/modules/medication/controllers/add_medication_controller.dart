@@ -37,11 +37,9 @@ class AddMedicationController extends GetxController {
   final _logger = Logger();
   final _uuid = const Uuid();
   final _settingsService = Get.find<SettingsService>();
-  final _interactionService = Get.find<InteractionService>();
   final _scheduleService = Get.find<ScheduleService>();
 
   final formKey = GlobalKey<FormState>();
-  final CustomInteractionService _customInteractionService = Get.find();
 
   // Controllers
   final nameController = TextEditingController();
@@ -476,7 +474,8 @@ class AddMedicationController extends GetxController {
     if (listFetchAllReminders != null) {
       List<NewInteractionResult> listResult = await NewInteractionChecker.checkInteractions(medication, reminders,listFetchAllReminders!);
 
-      if (listResult.isNotEmpty) {//
+      if (listResult.isNotEmpty) {
+
         await NewInteractionChecker.showInteractionDialog(context, listResult);
       } else {
         // إذا لم يكن هناك تفاعلات دوائية
@@ -638,18 +637,7 @@ class AddMedicationController extends GetxController {
 
       medication.newInteractions = newInteractions;
 
-      // InteractionResult result = await _customInteractionService.checkInteraction(medication, reminders);
-      //
-      // if(listFetchAllReminders!=null) {
-      //   List<NewInteractionResult>listResult = await NewInteractionChecker.checkInteractions(medication, listFetchAllReminders!);
-      // }
-      // if (result.conflicts.isNotEmpty) {
-      //   Logger().d('Showing interaction dialog');
-      //   final shouldContinue = await _showInteractionDialog(result);
-      //   Logger().d('Dialog result: $shouldContinue');
-      //   if (!shouldContinue) return;
-      // }
-
+     
       if(reminders.isNotEmpty){
         reminders.forEach((e){
           e.medicineModelDataSet = selectedMedicineModelDataSet.value;
@@ -880,7 +868,7 @@ class AddMedicationController extends GetxController {
                             ),
                           ),
                           child: const Text(
-                            'متابعة',
+                            'Continue',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -898,7 +886,7 @@ class AddMedicationController extends GetxController {
                             ),
                           ),
                           child: const Text(
-                            'إلغاء',
+                            'Cancel',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -939,24 +927,7 @@ class AddMedicationController extends GetxController {
         reminder.medicineModelDataSet = selectedMedicineModelDataSet.value;
         _customReminderController.addReminder(reminder);
 
-//         Locale currentLocale = Get.locale ?? Locale('en'); // الافتراضي الإنجليزية إذا لم يتم تحديد لغة
-//
-// // تحديد النصوص بناءً على اللغة
-//         String title = currentLocale.languageCode == 'ar'
-//             ? 'حان وقت تناول ${(medication.optionalName?.trim() ?? medication.name)}'
-//             : 'Time for ${(medication.optionalName?.trim() ?? medication.name)}';
-//
-//         String body = currentLocale.languageCode == 'ar'
-//             ? 'تناول ${medication.doseQuantity} ${medication.unit} من ${(medication.optionalName?.trim() ?? medication.medicineModelDataSet?.tradeName)}\n${medication.instructions}'
-//             : 'Take ${medication.doseQuantity} ${medication.unit} of ${(medication.optionalName?.trim() ?? medication.medicineModelDataSet?.tradeName)}\n${medication.instructions}';
-//
-// // تمرير النصوص للإشعار
-//         await _scheduleService.scheduleReminder(
-//           reminder,
-//           title,
-//           body,
-//           useTorch: true, // Enable torch for all reminders
-//         );
+
         String name  = '';
         if(medication.optionalName.isEmpty&&medication.name.isNotEmpty){
           name = medication.name;
@@ -1080,15 +1051,6 @@ await fetchAllReminders();
 
       medication.interactions = interactions;
 
-      // InteractionResult result = await _customInteractionService.checkInteraction(medication, reminders);
-      //
-      // if (result.conflicts.isNotEmpty) {
-      //   Logger().d('Showing interaction dialog');
-      //   final shouldContinue = await _showInteractionDialog(result);
-      //   Logger().d('Dialog result: $shouldContinue');
-      //   if (!shouldContinue) return;
-      // }
-
 
       if (listFetchAllReminders != null){
         List<NewInteractionResult> interactions = await NewInteractionChecker.checkInteractions(
@@ -1148,233 +1110,7 @@ await fetchAllReminders();
     }
   }
 
-  Future<bool> _showInteractionDialog(InteractionResult result) async {
-    final conflicts = result.conflicts.toList();
-    final RxList<ConflictDetail> rxConflicts = conflicts.obs;
-
-    return await Get.dialog<bool>(
-          AlertDialog(
-            title: Text(
-              'medication_interaction_warning'.tr,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
-              ),
-            ),
-            content: Obx(() => SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'medication_interaction_description'.tr,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 16),
-                      ...rxConflicts.map((conflict) {
-                        final existingTime = conflict.existingReminder.dateTime;
-                        final newTime = conflict.newReminder.dateTime;
-                        final timeDiff = newTime.difference(existingTime);
-                        final daysDiff = timeDiff.inDays;
-                        final minutesDiff = timeDiff.inMinutes.abs() % (24 * 60);
-
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: AppColors.primary.withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.warning_rounded,
-                                    color: Colors.orange[700],
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      conflict.existingMedication.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildTimeRow(
-                                      'existing_reminder'.tr,
-                                      existingTime,
-                                      AppColors.primary,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    _buildTimeRow(
-                                      'new_reminder'.tr,
-                                      newTime,
-                                      Colors.orange[700]!,
-                                    ),
-                                    const Divider(height: 16),
-                                    Text(
-                                      daysDiff != 0
-                                          ? 'time_difference'.tr +
-                                              ': ' +
-                                              (daysDiff > 0 ? '+' : '') +
-                                              '$daysDiff ' +
-                                              (daysDiff.abs() == 1 ? 'day'.tr : 'days'.tr)
-                                          : 'time_difference'.tr + ': ' + '$minutesDiff ' + (minutesDiff == 1 ? 'minute'.tr : 'minutes'.tr),
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Wrap(
-                                children: [
-                                  // Day adjustment buttons
-                                  Row(
-                                    children: [
-                                      _buildTimeButton(
-                                        onPressed: () {
-                                          final index = rxConflicts.indexOf(conflict);
-                                          final adjustedTime = conflict.newReminder.dateTime.subtract(const Duration(days: 1));
-                                          final adjustedReminder = conflict.newReminder.copyWith(dateTime: adjustedTime);
-                                          final adjustedConflict = conflict.copyWith(newReminder: adjustedReminder);
-                                          rxConflicts[index] = adjustedConflict;
-
-                                          // Update the actual reminder
-                                          final reminderIndex = reminders.indexWhere((r) => r.id == conflict.newReminder.id);
-                                          if (reminderIndex != -1) {
-                                            reminders[reminderIndex] = adjustedReminder;
-                                          }
-                                        },
-                                        icon: Icons.remove_circle_outline,
-                                        label: 'day'.tr,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      _buildTimeButton(
-                                        onPressed: () {
-                                          final index = rxConflicts.indexOf(conflict);
-                                          final adjustedTime = conflict.newReminder.dateTime.add(const Duration(days: 1));
-                                          final adjustedReminder = conflict.newReminder.copyWith(dateTime: adjustedTime);
-                                          final adjustedConflict = conflict.copyWith(newReminder: adjustedReminder);
-                                          rxConflicts[index] = adjustedConflict;
-
-                                          // Update the actual reminder
-                                          final reminderIndex = reminders.indexWhere((r) => r.id == conflict.newReminder.id);
-                                          if (reminderIndex != -1) {
-                                            reminders[reminderIndex] = adjustedReminder;
-                                          }
-                                        },
-                                        icon: Icons.add_circle_outline,
-                                        label: 'day'.tr,
-                                      ),
-                                    ],
-                                  ),
-                                  // Time adjustment buttons
-                                  Row(
-                                    children: [
-                                      _buildTimeButton(
-                                        onPressed: () {
-                                          final index = rxConflicts.indexOf(conflict);
-                                          final adjustedTime = conflict.newReminder.dateTime.subtract(const Duration(minutes: 30));
-                                          final adjustedReminder = conflict.newReminder.copyWith(dateTime: adjustedTime);
-                                          final adjustedConflict = conflict.copyWith(newReminder: adjustedReminder);
-                                          rxConflicts[index] = adjustedConflict;
-
-                                          // Update the actual reminder
-                                          final reminderIndex = reminders.indexWhere((r) => r.id == conflict.newReminder.id);
-                                          if (reminderIndex != -1) {
-                                            reminders[reminderIndex] = adjustedReminder;
-                                          }
-                                        },
-                                        icon: Icons.remove_circle_outline,
-                                        label: 'minutes'.tr,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      _buildTimeButton(
-                                        onPressed: () {
-                                          final index = rxConflicts.indexOf(conflict);
-                                          final adjustedTime = conflict.newReminder.dateTime.add(const Duration(minutes: 30));
-                                          final adjustedReminder = conflict.newReminder.copyWith(dateTime: adjustedTime);
-                                          final adjustedConflict = conflict.copyWith(newReminder: adjustedReminder);
-                                          rxConflicts[index] = adjustedConflict;
-
-                                          // Update the actual reminder
-                                          final reminderIndex = reminders.indexWhere((r) => r.id == conflict.newReminder.id);
-                                          if (reminderIndex != -1) {
-                                            reminders[reminderIndex] = adjustedReminder;
-                                          }
-                                        },
-                                        icon: Icons.add_circle_outline,
-                                        label: 'minutes'.tr,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ],
-                  ),
-                )),
-            actions: [
-              TextButton(
-                onPressed: () => Get.back(result: false),
-                child: Text(
-                  'edit_reminders'.tr,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => Get.back(result: true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  'save_anyway'.tr,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-          barrierDismissible: false,
-        ) ??
-        false;
-  }
+  
 
   Widget _buildTimeRow(String label, DateTime time, Color color) {
     final timeStr = Get.locale?.languageCode == 'ar'
@@ -1564,44 +1300,7 @@ await fetchAllReminders();
     }
   }
 
-  // Future<void> onUpdatePressed() async {
-  //   if (!_validateForm()) {
-  //     return;
-  //   }
-  //
-  //   try {
-  //     isLoading.value = true;
-  //
-  //     // Get the current medication data
-  //     final updatedMedication = toMedication();
-  //
-  //     // Update the medication in the database
-  //     await _customMedicationController.updateMedication(updatedMedication);
-  //
-  //     // Update reminders
-  //     for (var reminder in reminders) {
-  //       await _customReminderController.updateReminder(reminder);
-  //     }
-  //
-  //     Get.back(result: true);
-  //     Get.snackbar(
-  //       'Success',
-  //       'Medication updated successfully',
-  //       backgroundColor: Colors.green.withOpacity(0.1),
-  //       colorText: Colors.green[800],
-  //     );
-  //   } catch (e) {
-  //     _logger.e('Error updating medication', error: e);
-  //     Get.snackbar(
-  //       'Error',
-  //       'Failed to update medication',
-  //       backgroundColor: Colors.red.withOpacity(0.1),
-  //       colorText: Colors.red[800],
-  //     );
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
+
 
   // Reminder status helpers
   Color getReminderStatusColor(ReminderState state) {

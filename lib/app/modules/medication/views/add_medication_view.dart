@@ -1173,37 +1173,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
     });
   }
 
-  Widget _buildMedicationImage2() {
-    return Obx(() {
-      final imageUrl = controller.medication.value.imageUrl;
-      if (imageUrl == null) return SizedBox.shrink();
 
-      return Container(
-        width: double.infinity,
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Center(
-                child: Icon(
-                  Icons.medication,
-                  size: 64,
-                  color: AppColors.primary,
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    });
-  }
 
   Widget _buildQuantityFields() {
     return Column(
@@ -1238,59 +1208,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
 
             const SizedBox(height: 12),
             _buildSectionTitle('dose_amount'.tr, Icons.ac_unit_rounded),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     _buildSectionTitle('dose_amount'.tr, Icons.ac_unit_rounded),
-            //     // InkResponse(child: Icon(Icons.question_mark,color: Colors.grey,))
-            //
-            //     InkResponse(
-            //       onTap: (){
-            //         controller.showHintDoseAmount.value = !controller.showHintDoseAmount.value;
-            //
-            //         Future.delayed(const Duration(seconds: 10),(){
-            //           controller.showHintDoseAmount.value = false;
-            //         });
-            //
-            //         },
-            //       child: CircleAvatar(
-            //         radius: 9,
-            //         child: Transform(
-            //           alignment: Alignment.center,
-            //           transform: Directionality.of(Get.context!) == TextDirection.rtl
-            //               ? Matrix4.rotationY(math.pi) // يعكس الأيقونة للغة العربية
-            //               : Matrix4.identity(),        // يحتفظ بالشكل الأصلي للغة الإنجليزية
-            //           child: Icon(
-            //             Icons.question_mark,
-            //             color: Colors.grey,
-            //             size: 15,
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //     Obx(()=>AnimatedOpacity(
-            //       duration: new Duration(milliseconds: 500),
-            //       opacity: controller.showHintDoseAmount.value?1:0,
-            //       child: Container(
-            //         margin: EdgeInsets.symmetric(horizontal: 4),
-            //         child: Text('كم مرة تتناول هذا الدواء',style: TextStyle(
-            //             fontSize: 11,
-            //             color: Colors.grey.shade700
-            //         ),),
-            //       ),
-            //     )
-            //     )
-            //     // Container(
-            //     //   margin: EdgeInsets.symmetric(horizontal: 4),
-            //     //   child: Text('كم مرة تتناول هذا الدواء',style: TextStyle(
-            //     //     fontSize: 11,
-            //     //     color: Colors.grey.shade400
-            //     //   ),),
-            //     // )
-            //
-            //   ],
-            // ),
+        
             const SizedBox(height: 12),
             _buildInputContainer(
               child: TextFormField(
@@ -1335,18 +1253,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                 firstDate: DateTime.now().add(const Duration(days: 1)), // يمنع اختيار أي تاريخ قبل اليوم
                 lastDate: DateTime.now().add(const Duration(days: 3650)), // الحد الأقصى للتاريخ بعد 10 سنوات
               );
-              // final _storage = GetStorage();
-              //
-              // int? selectedExpiryReminderDays = _storage.read('expiry_reminder_days') ?? 3;
-              // print("controller.selectedExpiryReminderDays.value ${selectedExpiryReminderDays}");
-              // final firstDate = DateTime.now().add(Duration(days: selectedExpiryReminderDays));
-              //
-              // final date = await showDatePicker(
-              //   context: Get.context!,
-              //   initialDate: firstDate, // يبدأ من التاريخ بناءً على الإعداد
-              //   firstDate: firstDate, // يمنع اختيار أي تاريخ قبل القيمة المحددة
-              //   lastDate: DateTime.now().add(const Duration(days: 3650)), // الحد الأقصى بعد 10 سنوات
-              // );
+             
 
               if (date != null) {
                 controller.expiryDate.value = date;
@@ -1482,12 +1389,15 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
   }
 
   Widget _buildInteractionsSection() {
-    Get.put(NewInteractionService());
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle('interactions'.tr, Icons.warning_amber_rounded),
-        const SizedBox(height: 12),
+  Get.put(NewInteractionService());
+   final controller = Get.find<AddMedicationController>();
+  //Get.put(NewInteractionResult);
+  //List<NewInteractionResult> interactions = await NewInteractionChecker.checkInteractions111
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildSectionTitle('interactions'.tr, Icons.warning_amber_rounded),
+      const SizedBox(height: 12),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
@@ -1503,7 +1413,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             ],
           ),
           child: Obx(() {
-            // final interactions = controller.newInteractions;
+          
             final newInteractions = controller.newInteractions;
             if (newInteractions.isEmpty) {
               return Center(
@@ -1517,7 +1427,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'no_interactions'.tr,
+                      'No interactions'.tr,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
@@ -1528,18 +1438,23 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                 ),
               );
             }
-
+            
             final newInteractionService = Get.find<NewInteractionService>();
           
   controller.medicationsSchedule= newInteractionService.findOptimalSchedule(controller.reminders,controller.listFetchAllReminders??[]);
   final schedule = controller.medicationsSchedule??{};
-// final schedule = newInteractionService.findOptimalSchedule(controller.reminders,controller.listFetchAllReminders!);
 
+            print("Total interactions: ${newInteractions.length}");
             print("Generated schedule: $schedule");
             print("controller.existingMedications ${controller.existingMedications}");
             print("controller.toMedication() ${controller.toMedication()}");
+
+        
+
             // todo :: call _buildInteractionItem
+ 
             return Column(
+              
               children: newInteractions.map((interaction) => _buildInteractionItem(interaction, schedule)).toList(),
             );
           }),
@@ -1548,7 +1463,12 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
     );
   }
   Widget _buildInteractionItem(NewInteractionModel interaction, Map<String, List<DateTime>> schedule) {
-    final recommendedTimes = schedule[interaction.medicationName] ?? [];
+
+  print("Displaying interaction: ${interaction.medicationName}");
+  print("Interaction Type: ${interaction.interactionType}");
+  
+  final recommendedTimes = schedule[interaction.medicationName] ?? [];
+print("Building interaction item for: ${interaction.medicationName}");
 
     // تحديد اللون بناءً على نوع التفاعل
     Color interactionColor;
@@ -1563,7 +1483,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
         interactionDisplayName = 'Moderate Risk';
         break;
       case 'Minor':
-        interactionColor = Colors.yellow;
+        interactionColor = const Color.fromARGB(255, 228, 208, 26);
         interactionDisplayName = 'Low Risk';
         break;
       default:
@@ -1620,7 +1540,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             if (recommendedTimes.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'recommended_times'.tr,
+                'Suggested safe times'.tr,
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -1646,85 +1566,7 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
       ),
     );
   }
-  Widget _buildInteractionItem2(InteractionModel interaction, Map<String, List<DateTime>> schedule) {
-    final recommendedTimes = schedule[interaction.medicationName] ?? [];
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.warning_rounded,
-                  color: interaction.riskLevel.color,
-                  size: 24,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    interaction.medicationName,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: interaction.riskLevel.color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    interaction.riskLevel.displayName,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: interaction.riskLevel.color,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              interaction.description,
-              style: GoogleFonts.poppins(fontSize: 14),
-            ),
-            if (recommendedTimes.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(
-                'recommended_times'.tr,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Wrap(
-                spacing: 8,
-                children: recommendedTimes
-                    .map(
-                      (time) => Chip(
-                        label: Text(
-                          intl.DateFormat('hh:mm a').format(time),
-                          style: GoogleFonts.poppins(fontSize: 12),
-                        ),
-                        backgroundColor: AppColors.primary.withOpacity(0.1),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
+  
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [

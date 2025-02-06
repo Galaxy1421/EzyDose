@@ -372,7 +372,7 @@ class NewInteractionChecker {
                         : (isArabic
                             ? 'تفاعل دوائي بين ${newMedication.name} و ${existingMedication.tradeName}.'
                             : 'Drug interaction detected between ${newMedication.name} and ${existingMedication.tradeName}.'),
-            recommendation: interactionType == "Major"
+          /*recommendation: interactionType == "Major"
                 ? (isArabic
                     ? 'يرجى التوقف عن تناول هذه الأدوية فورًا والتواصل مع طبيبك أو الطوارئ، لأن هذا التفاعل قد يؤدي إلى مخاطر صحية كبيرة!'
                     : 'Please stop taking these medications immediately and contact your doctor or emergency services, as this interaction may lead to serious health risks!')
@@ -390,7 +390,7 @@ class NewInteractionChecker {
                                 : 'It is recommended to leave a time gap of ${isValidTimingGap ? timingGap1 ?? timingGap2 : 'undefined'} minutes between doses.')
                             : (isArabic
                                 ? 'التفاعل بسبب تقارب الأوقات، يرجى مراجعة الطبيب لتحديد التوصيات المناسبة.'
-                                : 'Interaction due to close timing, please consult your doctor for appropriate recommendations.'),
+                                : 'Interaction due to close timing, please consult your doctor for appropriate recommendations.'),*/
           ));
         }
       }
@@ -401,316 +401,9 @@ class NewInteractionChecker {
 
 //=====================================
 
-  static Future<List<NewInteractionResult>> checkInteractions3(
-      MedicationModel newMedication, List<ReminderModel> newReminders, List<ReminderModel> existingReminders) async {
-    List<NewInteractionResult> interactions = [];
 
-    for (var newReminder in newReminders) {
-      var newMedicationData = newReminder.medicineModelDataSet;
 
-      if (newMedicationData == null) {
-        print('Skipped new reminder due to missing medication data.');
-        continue;
-      }
-
-      for (var existingReminder in existingReminders) {
-        var existingMedication = existingReminder.medicineModelDataSet;
-
-        if (existingMedication == null) {
-          print('Skipped existing reminder due to missing medication data.');
-          continue;
-        }
-
-        print('Comparing: ${newMedicationData.tradeName} with ${existingMedication.tradeName}');
-
-        // التحقق من نوع التفاعل
-        String interactionType = _determineInteractionType(newMedicationData, existingMedication);
-
-        // تحليل الفجوات الزمنية
-        final timingGap1 = _parseTimingGap(newMedicationData.timingGap1);
-        final timingGap2 = _parseTimingGap(newMedicationData.timingGap2);
-
-        // حساب الفرق الزمني بين التذكير الجديد والتذكير السابق
-        final timeDifference = newReminder.dateTime.difference(existingReminder.dateTime).inMinutes.abs();
-
-        print('Time Difference: $timeDifference minutes');
-
-        // التحقق من الفجوة الزمنية حتى في حال "No Interaction"
-        bool hasTimingGapIssue = (timingGap1 != null && timeDifference < timingGap1) || (timingGap2 != null && timeDifference < timingGap2);
-
-        if (interactionType != "No Interaction" || hasTimingGapIssue) {
-          String recommendationMessage = hasTimingGapIssue
-              ? 'يرجى ترك فجوة زمنية قدرها ${hasTimingGapIssue && timingGap1 != null ? timingGap1 : timingGap2} دقيقة بين الجرعات لتجنب التأثير على امتصاص الدواء.'
-              : '';
-
-          String interactionDescription = interactionType != "No Interaction"
-              ? 'تفاعل دوائي بين ${newMedication.name} و ${existingMedication.tradeName}.'
-              : 'لا يوجد تفاعل دوائي مباشر، لكن الفجوة الزمنية غير كافية بين ${newMedication.name} و ${existingMedication.tradeName}.';
-
-          print('Interaction or timing gap detected between ${newMedicationData.tradeName} and ${existingMedication.tradeName}.');
-
-          NewInteractionModel interaction = NewInteractionModel(
-            id: Uuid().v4(),
-            medicationId: newMedication.id,
-            interactingMedicationId: existingReminder.id,
-            medicationName: newMedication.name,
-            interactingMedicationName: existingMedication.tradeName ?? 'Unknown',
-            interactionType: interactionType != "No Interaction" ? interactionType : 'Timing Gap Issue',
-            timingGap: hasTimingGapIssue ? (timingGap1 != null ? timingGap1.toString() : timingGap2?.toString() ?? 'غير محدد') : 'غير محدد',
-            description: interactionDescription,
-            recommendation: recommendationMessage.isNotEmpty ? recommendationMessage : 'يرجى مراجعة الطبيب لمعرفة التوصيات المناسبة.',
-          );
-
-          interactions.add(NewInteractionResult(
-            medication1: newMedication,
-            medication2: existingMedication,
-            newReminder: newReminder,
-            existingReminder: existingReminder,
-            timingGap1: timingGap1?.toString(),
-            timingGap2: timingGap2?.toString(),
-            interactionType: interactionType != "No Interaction" ? interactionType : 'Timing Gap Issue',
-            description: interactionDescription,
-            recommendation: recommendationMessage,
-          ));
-        } else {
-          print('No interaction or timing gap issues detected between ${newMedicationData.tradeName} and ${existingMedication.tradeName}.');
-        }
-      }
-    }
-
-    print('Total interactions found: ${interactions.length}');
-    return interactions;
-  }
-
-  static Future<List<NewInteractionResult>> checkInteractions2(
-      MedicationModel newMedication, List<ReminderModel> newReminders, List<ReminderModel> existingReminders) async {
-    List<NewInteractionResult> interactions = [];
-
-    for (var newReminder in newReminders) {
-      var newMedicationData = newReminder.medicineModelDataSet;
-
-      for (var existingReminder in existingReminders) {
-        var existingMedication = existingReminder.medicineModelDataSet;
-
-        if (newMedicationData == null || existingMedication == null) {
-          continue;
-        }
-
-        print('New Medication: ${newMedicationData.tradeName}');
-        print('Existing Medication: ${existingMedication.tradeName}');
-
-        // التحقق من التفاعل بناءً على الحقول (Minor, Moderate, Major)
-        String interactionType = _determineInteractionType(newMedicationData, existingMedication);
-// تحليل النطاق الزمني
-        final timingGap1 = _parseTimingGap(newMedicationData.timingGap1);
-        final timingGap2 = _parseTimingGap(newMedicationData.timingGap2);
-
-        // حساب الفرق الزمني بين التذكير الجديد والتذكير السابق
-        final timeDifference = newReminder.dateTime.difference(existingReminder.dateTime).inMinutes.abs();
-
-        print('Time Difference: $timeDifference minutes');
-
-        // تحقق من القيم atcCode1Interact و atcCode2Interact
-        bool isValidGapForAll = newMedicationData.atcCode1Interact?.toLowerCase() == "all" && timingGap1 != null && timeDifference < timingGap1;
-        bool isValidGapForSpecific = newMedicationData.atcCode2Interact != null &&
-            newMedicationData.atcCode2Interact!.contains(existingMedication.atcCode1!) &&
-            timingGap2 != null &&
-            timeDifference < timingGap2;
-
-        if (isValidGapForAll || isValidGapForSpecific) {
-          final addMedController = Get.find<AddMedicationController>();
-          addMedController.newInteractions.clear();
-
-          NewInteractionModel interaction = NewInteractionModel(
-            id: Uuid().v4(),
-            medicationId: newMedication.id,
-            interactingMedicationId: existingReminder.id,
-            medicationName: newMedication.name,
-            interactingMedicationName: existingMedication.tradeName ?? 'Unknown',
-            interactionType: interactionType,
-            timingGap: isValidGapForAll
-                ? timingGap1.toString()
-                : isValidGapForSpecific
-                    ? timingGap2.toString()
-                    : 'غير محدد',
-            description: 'تفاعل دوائي بين ${newMedication.name} و ${existingMedication.tradeName}.',
-            recommendation: 'يوصى بترك فجوة زمنية قدرها ${isValidGapForAll ? timingGap1 : timingGap2} دقيقة بين الجرعات.',
-          );
-
-          addMedController.newInteractions.add(interaction);
-        }
-        if (interactionType != "No Interaction") {
-          // continue;
-          final bool isArabic = Get.locale?.languageCode == 'ar';
-
-          interactions.add(NewInteractionResult(
-            medication1: newMedication,
-            medication2: existingMedication,
-            newReminder: newReminder,
-            existingReminder: existingReminder,
-            timingGap1: timingGap1?.toString(),
-            timingGap2: timingGap2?.toString(),
-            interactionType: interactionType,
-            description: interactionType == "Major"
-                ? (isArabic
-                    ? 'تحذير خطير: هذا التفاعل الدوائي بين ${newMedication.name} و ${existingMedication.tradeName} قد يكون مهددًا للحياة!'
-                    : 'Critical Warning: This drug interaction between ${newMedication.name} and ${existingMedication.tradeName} may be life-threatening!')
-                : interactionType == "Moderate"
-                    ? (isArabic
-                        ? 'تنبيه: قد يسبب هذا التفاعل الدوائي بين ${newMedication.name} و ${existingMedication.tradeName} مخاطر صحية متوسطة تتطلب الحذر.'
-                        : 'Caution: This drug interaction between ${newMedication.name} and ${existingMedication.tradeName} may pose moderate health risks and requires caution.')
-                    : interactionType == "Minor"
-                        ? (isArabic
-                            ? 'إشعار: هذا التفاعل الدوائي بين ${newMedication.name} و ${existingMedication.tradeName} يعتبر بسيطًا، ولكنه قد يؤثر على فعاليتك اليومية.'
-                            : 'Notice: This drug interaction between ${newMedication.name} and ${existingMedication.tradeName} is minor, but it may affect your daily activities.')
-                        : (isArabic
-                            ? 'تفاعل دوائي بين ${newMedication.name} و ${existingMedication.tradeName}.'
-                            : 'Drug interaction detected between ${newMedication.name} and ${existingMedication.tradeName}.'),
-            recommendation:
-                'يرجى ترك فجوة زمنية مناسبة (${isValidGapForAll ? timingGap1 : timingGap2} دقيقة) بين تناول الجرعات لتجنب التأثير على الامتصاص.',
-          ));
-        }
-      }
-    }
-
-    return interactions;
-  }
-
-  static Future<List<NewInteractionResult>> checkInteractionsDeepSeek(
-      MedicationModel newMedication, List<ReminderModel> newReminders, List<ReminderModel> existingReminders) async {
-    List<NewInteractionResult> interactions = [];
-
-    for (var newReminder in newReminders) {
-      var newMedicationData = newReminder.medicineModelDataSet;
-
-      for (var existingReminder in existingReminders) {
-        var existingMedication = existingReminder.medicineModelDataSet;
-
-        if (newMedicationData == null || existingMedication == null) {
-          continue;
-        }
-
-        print('New Medication: ${newMedicationData.tradeName}');
-        print('Existing Medication: ${existingMedication.tradeName}');
-
-        String interactionType = _determineInteractionType(newMedicationData, existingMedication);
-
-        final timingGap1 = _parseTimingGap(newMedicationData.timingGap1);
-        final timingGap2 = _parseTimingGap(newMedicationData.timingGap2);
-
-        final timeDifference = newReminder.dateTime.difference(existingReminder.dateTime).inMinutes.abs();
-        print('Time Difference: $timeDifference minutes');
-
-        // تحديد الفجوة الزمنية بناءً على ATC
-        bool applyGap1 = newMedicationData.atcCode1Interact?.contains('all') ?? false;
-        bool applyGap2 = false;
-
-        String? existingATC = existingMedication.atcCode1;
-        if (existingATC != null && newMedicationData.atcCode2Interact != null) {
-          var codes = newMedicationData.atcCode2Interact?.split(',').map((code) => code.trim()).toList() ?? [];
-          applyGap2 = codes.contains(existingATC.trim());
-        }
-
-        int? applicableGap1 = applyGap1 ? timingGap1 : null;
-        int? applicableGap2 = applyGap2 ? timingGap2 : null;
-
-        bool isValidTimingGap =
-            (applicableGap1 != null && timeDifference < applicableGap1) || (applicableGap2 != null && timeDifference < applicableGap2);
-
-        if (interactionType == "No Interaction" && !isValidTimingGap) {
-          continue;
-        }
-
-        final addMedController = Get.find<AddMedicationController>();
-        addMedController.newInteractions.clear();
-
-        String timingGapValue = '';
-        if (applicableGap1 != null && timeDifference < applicableGap1) {
-          timingGapValue = applicableGap1.toString();
-        } else if (applicableGap2 != null && timeDifference < applicableGap2) {
-          timingGapValue = applicableGap2.toString();
-        }
-
-        NewInteractionModel interaction = NewInteractionModel(
-          id: Uuid().v4(),
-          medicationId: newMedication.id,
-          interactingMedicationId: existingReminder.id,
-          medicationName: newMedication.name,
-          interactingMedicationName: existingMedication.tradeName ?? 'Unknown',
-          interactionType: interactionType,
-          timingGap: isValidTimingGap ? timingGapValue : 'غير محدد',
-          description: interactionType != "No Interaction"
-              ? 'تفاعل دوائي بين ${newMedication.name} و ${existingMedication.tradeName}.'
-              : 'فجوة زمنية مطلوبة بين ${newMedication.name} و ${existingMedication.tradeName}.',
-          recommendation: isValidTimingGap
-              ? 'يوصى بترك فجوة زمنية قدرها $timingGapValue دقيقة بين الجرعات.'
-              : 'التفاعل بسبب تقارب الأوقات، يرجى مراجعة الطبيب لتحديد التوصيات المناسبة.',
-        );
-
-        addMedController.newInteractions.add(interaction);
-
-        final bool isArabic = Get.locale?.languageCode == 'ar';
-
-        String description;
-        String recommendation;
-
-        if (interactionType != "No Interaction") {
-          // رسائل التفاعل الدوائي
-          description = interactionType == "Major"
-              ? (isArabic
-                  ? 'تحذير خطير: هذا التفاعل الدوائي بين ${newMedication.name} و ${existingMedication.tradeName} قد يكون مهددًا للحياة!'
-                  : 'Critical Warning: This drug interaction between ${newMedication.name} and ${existingMedication.tradeName} may be life-threatening!')
-              : interactionType == "Moderate"
-                  ? (isArabic
-                      ? 'تنبيه: قد يسبب هذا التفاعل الدوائي بين ${newMedication.name} و ${existingMedication.tradeName} مخاطر صحية متوسطة تتطلب الحذر.'
-                      : 'Caution: This drug interaction between ${newMedication.name} and ${existingMedication.tradeName} may pose moderate health risks and requires caution.')
-                  : (isArabic
-                      ? 'إشعار: هذا التفاعل الدوائي بين ${newMedication.name} و ${existingMedication.tradeName} يعتبر بسيطًا، ولكنه قد يؤثر على فعاليتك اليومية.'
-                      : 'Notice: This drug interaction between ${newMedication.name} and ${existingMedication.tradeName} is minor, but it may affect your daily activities.');
-          recommendation = interactionType == "Major"
-              ? (isArabic
-                  ? 'يرجى التوقف عن تناول هذه الأدوية فورًا والتواصل مع طبيبك أو الطوارئ، لأن هذا التفاعل قد يؤدي إلى مخاطر صحية كبيرة!'
-                  : 'Please stop taking these medications immediately and contact your doctor or emergency services, as this interaction may lead to serious health risks!')
-              : interactionType == "Moderate"
-                  ? (isArabic
-                      ? 'يرجى استشارة طبيبك لتجنب أي آثار جانبية محتملة نتيجة هذا التفاعل.'
-                      : 'Please consult your doctor to avoid any potential side effects caused by this interaction.')
-                  : (isArabic
-                      ? 'قد لا يكون لهذا التفاعل تأثير كبير، ولكن يُفضل مراقبة حالتك واستشارة طبيبك إذا شعرت بأي أعراض.'
-                      : 'This interaction may not have a significant effect, but it is recommended to monitor your condition and consult your doctor if you experience any symptoms.');
-        } else {
-          // رسائل الفجوة الزمنية
-          description = isArabic
-              ? 'منعاً لامتصاص الدواء، يرجى ترك فجوة زمنية بين ${newMedication.name} و ${existingMedication.tradeName}.'
-              : 'To prevent drug absorption, please leave a time gap between ${newMedication.name} and ${existingMedication.tradeName}.';
-          recommendation = isArabic
-              ? 'يوصى بترك فجوة زمنية قدرها $timingGapValue دقيقة بين الجرعات.'
-              : 'It is recommended to leave a time gap of $timingGapValue minutes between doses.';
-        }
-
-        interactions.add(NewInteractionResult(
-          medication1: newMedication,
-          medication2: existingMedication,
-          newReminder: newReminder,
-          existingReminder: existingReminder,
-          timingGap1: timingGap1?.toString(),
-          timingGap2: timingGap2?.toString(),
-          interactionType: interactionType != "No Interaction" ? interactionType : "Timing Gap",
-          description: description,
-          recommendation: recommendation,
-        ));
-      }
-    }
-
-    return interactions;
-  }
-
-  static int? _parseTimingGap2(String? timingGap) {
-    if (timingGap == null || timingGap.isEmpty) {
-      return null;
-    }
-    return int.tryParse(timingGap);
-  }
+ 
 
   static String _determineInteractionType(MedicineModelDataSet? newMedication, MedicineModelDataSet existingMedication) {
     final newAtcCode1 = newMedication?.atcCode1;
@@ -729,61 +422,7 @@ class NewInteractionChecker {
     return "No Interaction"; // لا يوجد تفاعل
   }
 
-  static void _addInteraction(
-    MedicationModel newMedication,
-    MedicineModelDataSet existingMedication,
-    String interactionType,
-    String timingGap,
-    List<NewInteractionResult> interactions,
-    ReminderModel newReminder,
-    ReminderModel existingReminder,
-  ) {
-    final bool isArabic = Get.locale?.languageCode == 'ar';
-    final addMedController = Get.find<AddMedicationController>();
-    addMedController.newInteractions.clear();
 
-    // التحقق من عدم وجود تفاعل مكرر
-    bool isDuplicate =
-        interactions.any((interaction) => interaction.medication1.id == newMedication.id && interaction.medication2.id == existingMedication.id);
-
-    if (!isDuplicate) {
-      NewInteractionModel interaction = NewInteractionModel(
-        id: Uuid().v4(),
-        medicationId: newMedication.id,
-        interactingMedicationId: existingReminder.id,
-        medicationName: newMedication.name,
-        interactingMedicationName: existingMedication.tradeName ?? 'Unknown',
-        interactionType: interactionType,
-        timingGap: timingGap,
-        // description: 'يوجد تفاعل دوائي بين ${newMedication.name} و ${existingMedication.tradeName}.',
-        // recommendation: timingGap == 'غير محدد'
-        //     ? 'يرجى استشارة الطبيب قبل تناولهما معًا.'
-        //     : 'يوصى بترك فجوة زمنية قدرها $timingGap دقيقة بين الجرعات.',
-
-        description: isArabic
-            ? 'يوجد تفاعل دوائي بين ${newMedication.name} و ${existingMedication.tradeName}.'
-            : 'There is a drug interaction between ${newMedication.name} and ${existingMedication.tradeName}.',
-        recommendation: timingGap == 'غير محدد'
-            ? isArabic
-                ? 'يرجى استشارة الطبيب قبل تناولهما معًا.'
-                : 'Please consult your doctor before taking them together.'
-            : isArabic
-                ? 'يوصى بترك فجوة زمنية قدرها $timingGap دقيقة بين الجرعات.'
-                : 'It is recommended to leave a time gap of $timingGap minutes between doses.',
-      );
-      addMedController.newInteractions.add(interaction);
-
-      interactions.add(NewInteractionResult(
-        medication1: newMedication,
-        medication2: existingMedication,
-        newReminder: newReminder,
-        existingReminder: existingReminder,
-        timingGap1: timingGap == 'غير محدد' ? null : timingGap,
-        timingGap2: null,
-        interactionType: interactionType,
-      ));
-    }
-  }
 
   static int? _parseTimingGap(String? timingGap) {
     if (timingGap == null || timingGap.isEmpty) {
@@ -853,14 +492,14 @@ class NewInteractionChecker {
                               break;
                             case "Moderate":
                               interactionColor = Colors.orange;
-                              interactionLevel = isArabic ? 'مخاطر محتملة' : 'Potential Risk';
+                              interactionLevel = isArabic ? 'مخاطر محتملة' : 'Moderate Risk';
                               interactionComment = isArabic
                                   ? 'مخاطر محتملة استشر طبيبًا قبل تناولها معًا'
                                   : 'Potential risks, consult a doctor before taking them together';
                               break;
                             case "Minor":
                               interactionColor = Colors.yellow;
-                              interactionLevel = isArabic ? 'مخاطر محتملة' : 'Potential Risk';
+                              interactionLevel = isArabic ? 'مخاطر محتملة' : 'Low Risk';
                               interactionComment = isArabic
                                   ? 'مخاطر محتملة استشر طبيبًا قبل تناولها معًا'
                                   : 'Potential risks, consult a doctor before taking them together';
@@ -1042,19 +681,7 @@ class NewInteractionChecker {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                // Text(
-                                //   timingGap == 'غير محدد'
-                                //       ? isArabic
-                                //       ? 'يوجد تفاعل دوائي بين ${medication1.name} و ${medication2.tradeName}. يرجى استشارة الطبيب قبل تناولهما معًا.'
-                                //       : 'There is a drug interaction between ${medication1.name} and ${medication2.tradeName}. Please consult your doctor before taking them together.'
-                                //       : isArabic
-                                //       ? 'يوصى بترك فجوة زمنية قدرها $timingGap دقيقة بين الجرعات.'
-                                //       : 'It is recommended to leave a time gap of $timingGap minutes between doses.',
-                                //   style: TextStyle(
-                                //     color: Colors.grey[600],
-                                //     fontSize: 14,
-                                //   ),
-                                // ),
+                            
                                 Divider(),
                                 Text("${interaction.description ?? 'null'}",
                                     style: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold)),

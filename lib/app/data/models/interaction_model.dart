@@ -26,7 +26,7 @@ enum RiskLevel {
       case RiskLevel.moderate:
         return Colors.orange;
       case RiskLevel.low:
-        return Colors.yellow;
+        return const Color.fromARGB(255, 195, 181, 51);
       case RiskLevel.none:
         return Colors.green;
     }
