@@ -26,11 +26,10 @@ import '../../../data/models/reminder_state.dart';
 import '../../../data/models/reminder_status.dart';
 import '../../../data/models/time_unit.dart';
 import '../../../data/sample/sample_data.dart';
-import '../../../data/services/interaction_service.dart';
-import '../../../data/services/medication_service.dart';
+
 import '../../../data/services/routine_service.dart';
 import '../../../data/services/settings_service.dart';
-import '../../../services/custom_interaction_service.dart';
+
 import '../../../services/custom_schulder_service.dart';
 
 class AddMedicationController extends GetxController {
@@ -1077,7 +1076,7 @@ await fetchAllReminders();
         }
         //frequny
 
-        _customReminderController.addReminder(reminder);
+        _customReminderController.updateReminder(reminder);
 
         // Schedule notification with torch for each reminder time
         await _scheduleService.scheduleReminder(
@@ -1101,59 +1100,6 @@ await fetchAllReminders();
   }
 
   
-
-  Widget _buildTimeRow(String label, DateTime time, Color color) {
-    final timeStr = Get.locale?.languageCode == 'ar'
-        ? '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}'
-        : '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-
-    return Row(
-      children: [
-        Text(
-          '$label: ',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
-        ),
-        Text(
-          timeStr,
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTimeButton({
-    required VoidCallback onPressed,
-    required IconData icon,
-    required String label,
-  }) {
-    return TextButton.icon(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.grey[100],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      ),
-      icon: Icon(icon, size: 16, color: AppColors.primary),
-      label: Text(
-        label,
-        style: TextStyle(
-          color: AppColors.primary,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
   ReminderFrequencyModel? getFrequencyModel() {
     // if (selectedMedicationFrequency.value == MedicationFrequency.daily) {
     //   return ReminderFrequencyModel.daily();
@@ -1173,8 +1119,7 @@ await fetchAllReminders();
   }
 
   bool _validateForm() {
-    // if (!formKey.currentState!.validate()) return false;
-
+  
     if (selectedReminderFrequency.value == MedicationFrequency.custom) {
       // Validate custom days
       final days = int.tryParse(customDaysController.text);
@@ -1237,35 +1182,16 @@ await fetchAllReminders();
   Future<void> editMedication() async {
     if (formKey.currentState!.validate()) {
       try {
-        // Cancel existing reminders first
-        // for (final reminder in medicationToEdit.value!.reminders) {
-        //   await _notificationService.cancelReminder(reminder.id);
-        // }
-        //
-        // final medicationModel = toMedication();
-        //
-        // await _medicationService.updateMedication(medicationModel);
-        //
-        // // Schedule new reminders
-        // for (final reminder in reminders) {
-        //   await _notificationService.scheduleReminder(reminder);
-        // }
+       
 
         Get.back(result: true);
-        // Get.snackbar(
-        //   'success'.tr,
-        //   'medication_updated'.tr,
-        //   snackPosition: SnackPosition.BOTTOM,
-        // );
+       
         SnackbarService().showSuccess(
           'medication_updated'.tr,
         );
 
       } catch (e) {
-        // Get.snackbar(
-        //   'error'.tr,
-        //   'error_updating_medication'.tr,
-        // );
+       
         SnackbarService().showError(
           'error_updating_medication'.tr,
         );
@@ -1399,14 +1325,7 @@ await fetchAllReminders();
     // Clear search results
     searchResults.clear();
 
-    // Show success message
-    // Get.snackbar(
-    //   'Medication Selected',
-    //   'Loaded ${medication.name} data successfully',
-    //   backgroundColor: Colors.green,
-    //   colorText: Colors.white,
-    //   duration: const Duration(seconds: 1),
-    // );
+    
     SnackbarService().showSuccess(
       AppHelper.isArabic
           ? "تم تحميل بيانات ${medication.name} بنجاح"
@@ -1436,10 +1355,7 @@ await fetchAllReminders();
     final routine = routineService.getRoutine();
 
     if (routine == null) {
-      // Get.snackbar(
-      //   'Error',
-      //   'Please set up your daily routine first',
-      // );
+     
       SnackbarService().showError(
           AppHelper.isArabic
               ? "يرجى إعداد روتينك اليومي أولاً"
@@ -1642,13 +1558,6 @@ await fetchAllReminders();
         // If reminders were adjusted, update them
         reminders.value = adjustedReminders;
 
-        // Show success message
-        // Get.snackbar(
-        //   'success'.tr,
-        //   'reminders_adjusted'.tr,
-        //   snackPosition: SnackPosition.BOTTOM,
-        //   backgroundColor: Colors.green[100],
-        // );
 
         SnackbarService().showSuccess(
           'reminders_adjusted'.tr,
@@ -1659,11 +1568,7 @@ await fetchAllReminders();
       // TODO: Save the reminders
       Get.back();
     } catch (e) {
-      // Get.snackbar(
-      //   'error'.tr,
-      //   'error_saving_reminders'.tr,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
+     
       SnackbarService().showError(
         'error_saving_reminders'.tr,
       );
