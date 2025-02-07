@@ -28,6 +28,7 @@ import '../../../data/models/interaction_model.dart';
 import '../controllers/add_medication_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:excel/excel.dart' as ex;
+
 class AddMedicationView extends GetView<AddMedicationController> {
   const AddMedicationView({Key? key}) : super(key: key);
 
@@ -36,7 +37,9 @@ class AddMedicationView extends GetView<AddMedicationController> {
   Widget build(BuildContext context) {
     ScrollController controller = ScrollController();
     return Directionality(
-      textDirection: Get.locale?.languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: Get.locale?.languageCode == 'ar'
+          ? TextDirection.rtl
+          : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: _buildAppBar(),
@@ -50,13 +53,17 @@ class AddMedicationView extends GetView<AddMedicationController> {
                 thumbVisibility: true,
                 crossAxisMargin: 3,
                 radius: Radius.circular(10),
-                padding: EdgeInsets.only(top: 50,),
+                padding: EdgeInsets.only(
+                  top: 50,
+                ),
                 child: ListView(
                   controller: controller,
                   children: [
                     _buildBody(),
                     _buildRemindersTab(),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               ),
@@ -65,17 +72,18 @@ class AddMedicationView extends GetView<AddMedicationController> {
                 left: 0,
                 right: 0,
                 child: MediaQuery.of(context).viewInsets.bottom > 0
-                    ? SizedBox.shrink()  // إخفاء الزر عندما يكون الكيبورد مفتوحًا
+                    ? SizedBox
+                        .shrink() // إخفاء الزر عندما يكون الكيبورد مفتوحًا
                     : Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: _buildSaveButton(),
-                ),
-              )
-,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20))),
+                        padding: const EdgeInsets.all(10),
+                        child: _buildSaveButton(),
+                      ),
+              ),
             ],
           ),
         ),
@@ -83,7 +91,10 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
     );
   }
 
-  Widget buildErrorMessage({required RxBool showErrorFlag, required String errorMessage, double top = 0}) {
+  Widget buildErrorMessage(
+      {required RxBool showErrorFlag,
+      required String errorMessage,
+      double top = 0}) {
     return Obx(() => showErrorFlag.value
         ? Container(
             margin: EdgeInsets.only(left: 10, right: 10, bottom: 10, top: top),
@@ -117,9 +128,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
         : const SizedBox.shrink());
   }
 
-
   Future<List<MedicineModelDataSet>> readExcelData() async {
-    final ByteData data = await rootBundle.load('assets/dataSet/Medicines Dataset2.xlsx');
+    final ByteData data =
+        await rootBundle.load('assets/dataSet/Medicines Dataset2.xlsx');
     final Uint8List bytes = data.buffer.asUint8List();
     final ex.Excel excel = ex.Excel.decodeBytes(bytes);
 
@@ -129,20 +140,33 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
 
     if (sheet != null) {
       for (var row in sheet.rows) {
-        if (row.length >= 13) { // التأكد من أن الصف يحتوي على بيانات كافية
+        if (row.length >= 13) {
+          // التأكد من أن الصف يحتوي على بيانات كافية
           medicines.add(MedicineModelDataSet(
-            atcCode1: row[0]?.value.toString(), // العمود 1: AtcCode1
-            tradeName: row[1]?.value.toString(), // العمود 2: Trade Name
-            constraint: row[2]?.value.toString(), // العمود 3: constraint
-            atcCode1Interact: row[3]?.value.toString(), // العمود 4: AtcCode1 Interact
-            timingGap1: row[4]?.value.toString(), // العمود 5: timing gap1 (in minutes)
-            atcCode2Interact: row[5]?.value.toString(), // العمود 6: AtcCode2 Interact
-            timingGap2: row[6]?.value.toString(), // العمود 7: timing gap2 (in minutes)
-            major: row[7]?.value.toString(), // العمود 8: Major
-            moderate: row[8]?.value.toString(), // العمود 9: Moderate
-            minor: row[9]?.value.toString(), // العمود 10: Minor
-            packageSize: row[10]?.value.toString(), // العمود 11: PackageSize
-            unit: row[11]?.value.toString(), // العمود 12: Unit
+            atcCode1: row[0]?.value.toString(),
+            // العمود 1: AtcCode1
+            tradeName: row[1]?.value.toString(),
+            // العمود 2: Trade Name
+            constraint: row[2]?.value.toString(),
+            // العمود 3: constraint
+            atcCode1Interact: row[3]?.value.toString(),
+            // العمود 4: AtcCode1 Interact
+            timingGap1: row[4]?.value.toString(),
+            // العمود 5: timing gap1 (in minutes)
+            atcCode2Interact: row[5]?.value.toString(),
+            // العمود 6: AtcCode2 Interact
+            timingGap2: row[6]?.value.toString(),
+            // العمود 7: timing gap2 (in minutes)
+            major: row[7]?.value.toString(),
+            // العمود 8: Major
+            moderate: row[8]?.value.toString(),
+            // العمود 9: Moderate
+            minor: row[9]?.value.toString(),
+            // العمود 10: Minor
+            packageSize: row[10]?.value.toString(),
+            // العمود 11: PackageSize
+            unit: row[11]?.value.toString(),
+            // العمود 12: Unit
             photoLink: row[12]?.value.toString(), // العمود 13: Photo Link
           ));
         }
@@ -182,81 +206,88 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // CustomDropdownExample(),
-                  if(false)
-                  ElevatedButton(onPressed: (){
-                    print(controller.medicationsSchedule?.length);
+                  if (false)
+                    ElevatedButton(
+                        onPressed: () {
+                          print(controller.medicationsSchedule?.length);
 
-                    Get.to(()=>MedicationScheduleView(schedule: controller.medicationsSchedule!));
-                  }, child: Text('MedicationScheduleView')),
-                  if(false)
-                  ElevatedButton(onPressed: ()async{
-                    Get.lazyPut(() => RemoteReminderDatSourceImpl());
+                          Get.to(() => MedicationScheduleView(
+                              schedule: controller.medicationsSchedule!));
+                        },
+                        child: Text('MedicationScheduleView')),
+                  if (false)
+                    ElevatedButton(
+                        onPressed: () async {
+                          Get.lazyPut(() => RemoteReminderDatSourceImpl());
 
-                    // await controller.fetchAllReminders();//
-                    //  print(controller.listFetchAllReminders!.length.toString());
-                    //
-                    //  if(controller.listFetchAllReminders!=null){
-                    //    controller.listFetchAllReminders!.forEach((e){
-                    //      print("\n\n============================================\n\n");
-                    //
-                    //      print("tradeName : ${e.medicineModelDataSet?.tradeName.toString()}");
-                    //      print("atcCode1 : ${e.medicineModelDataSet?.atcCode1.toString()}");
-                    //      print("atcCode1Interact : ${e.medicineModelDataSet?.atcCode1Interact.toString()}");
-                    //      print("atcCode2Interact : ${e.medicineModelDataSet?.atcCode2Interact.toString()}");
-                    //      print("timingGap1 : ${e.medicineModelDataSet?.timingGap1.toString()}");
-                    //      print("timingGap2 : ${e.medicineModelDataSet?.timingGap2.toString()}");
-                    //      print("unit : ${e.medicineModelDataSet?.unit.toString()}");
-                    //      print("packageSize : ${e.medicineModelDataSet?.packageSize.toString()}");
-                    //      print("minor : ${e.medicineModelDataSet?.minor.toString()}");
-                    //      print("moderate : ${e.medicineModelDataSet?.moderate.toString()}");
-                    //      print("major : ${e.medicineModelDataSet?.major.toString()}");
-                    //      print("constraint : ${e.medicineModelDataSet?.constraint.toString()}");
-                    //
-                    //      print("\n\n============================================\n\n");
-                    //    });
-                    //  }
+                          // await controller.fetchAllReminders();//
+                          //  print(controller.listFetchAllReminders!.length.toString());
+                          //
+                          //  if(controller.listFetchAllReminders!=null){
+                          //    controller.listFetchAllReminders!.forEach((e){
+                          //      print("\n\n============================================\n\n");
+                          //
+                          //      print("tradeName : ${e.medicineModelDataSet?.tradeName.toString()}");
+                          //      print("atcCode1 : ${e.medicineModelDataSet?.atcCode1.toString()}");
+                          //      print("atcCode1Interact : ${e.medicineModelDataSet?.atcCode1Interact.toString()}");
+                          //      print("atcCode2Interact : ${e.medicineModelDataSet?.atcCode2Interact.toString()}");
+                          //      print("timingGap1 : ${e.medicineModelDataSet?.timingGap1.toString()}");
+                          //      print("timingGap2 : ${e.medicineModelDataSet?.timingGap2.toString()}");
+                          //      print("unit : ${e.medicineModelDataSet?.unit.toString()}");
+                          //      print("packageSize : ${e.medicineModelDataSet?.packageSize.toString()}");
+                          //      print("minor : ${e.medicineModelDataSet?.minor.toString()}");
+                          //      print("moderate : ${e.medicineModelDataSet?.moderate.toString()}");
+                          //      print("major : ${e.medicineModelDataSet?.major.toString()}");
+                          //      print("constraint : ${e.medicineModelDataSet?.constraint.toString()}");
+                          //
+                          //      print("\n\n============================================\n\n");
+                          //    });
+                          //  }
 
-                    //=================
+                          //=================
 
+                          // إنشاء دواء جديد
+                          MedicationModel newMedication = MedicationModel(
+                              id: "1",
+                              name: "GLUCOPHAGE 1 g tablet",
+                              medicineModelDataSet: MedicineModelDataSet(
+                                atcCode1: "A10BA02",
+                                atcCode1Interact: "A10AE04",
+                                atcCode2Interact: "A10AD06",
+                                timingGap1: "30",
+                                timingGap2: "60",
+                                tradeName: "GLUCOPHAGE", //
+                              ),
+                              totalQuantity: 30,
+                              doseQuantity: 30,
+                              unit: 'Pills');
 
-                    // إنشاء دواء جديد
-                    MedicationModel newMedication = MedicationModel(
-                      id: "1",
-                      name: "GLUCOPHAGE 1 g tablet",
-                      medicineModelDataSet: MedicineModelDataSet(
-                        atcCode1: "A10BA02",
-                        atcCode1Interact: "A10AE04",
-                        atcCode2Interact: "A10AD06",
-                        timingGap1: "30",
-                        timingGap2: "60",
-                        tradeName: "GLUCOPHAGE",//
-                      ), totalQuantity: 30,
-                      doseQuantity: 30,
-                      unit: 'Pills'
-                    );
+                          // جلب التذكيرات من Firebase (هذا مثال بسيط)
+                          controller.listFetchAllReminders = [
+                            ReminderModel(
+                              id: "1",
+                              medicineModelDataSet: MedicineModelDataSet(
+                                atcCode1: "A10AE04",
+                                tradeName: "LANTUS SOLOSTAR",
+                              ),
+                              dateTime: DateTime.now(),
+                              type: ReminderType.afterBreakfast,
+                            ),
+                            ReminderModel(
+                                id: "2",
+                                medicineModelDataSet: MedicineModelDataSet(
+                                  atcCode1: "A10AD06",
+                                  tradeName: "RYZODEG FlexTouch",
+                                ),
+                                dateTime: DateTime.now(),
+                                type: ReminderType.afterBreakfast),
+                          ];
 
-                    // جلب التذكيرات من Firebase (هذا مثال بسيط)
-                    controller.listFetchAllReminders = [
-                      ReminderModel(
-                        id: "1",
-                        medicineModelDataSet: MedicineModelDataSet(
-                          atcCode1: "A10AE04",
-                          tradeName: "LANTUS SOLOSTAR",
-                        ), dateTime: DateTime.now(),type: ReminderType.afterBreakfast,
-                      ),
-                      ReminderModel(
-                        id: "2",
-                        medicineModelDataSet: MedicineModelDataSet(
-                          atcCode1: "A10AD06",
-                          tradeName: "RYZODEG FlexTouch",
-                        ),
-                          dateTime: DateTime.now(),type: ReminderType.afterBreakfast
-                      ),
-                    ];
-
-                    // التحقق من التفاعلات وعرض الرسائل التنبيهية
-                    await controller.checkAndShowInteractions(Get.context!, newMedication);
-                  }, child: Text("get all reminders from firestore")),
+                          // التحقق من التفاعلات وعرض الرسائل التنبيهية
+                          await controller.checkAndShowInteractions(
+                              Get.context!, newMedication);
+                        },
+                        child: Text("get all reminders from firestore")),
 
                   // ElevatedButton(onPressed: (){
                   //   NewInteractionChecker.showN(Get.context!);
@@ -282,57 +313,77 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                     hintText: 'please_enter_medication_name'.tr,
 
                     decoration: CustomDropdownDecoration(
-                      overlayScrollbarDecoration: ScrollbarThemeData(thumbVisibility: WidgetStatePropertyAll(true), thickness: WidgetStatePropertyAll(2),
-                      thumbColor: WidgetStatePropertyAll(Colors.lightBlue),
-                        crossAxisMargin: 2,
-                      ),
-                        searchFieldDecoration: SearchFieldDecoration(hintStyle: TextStyle(color: Colors.grey,fontWeight: FontWeight.normal,fontSize: 14,height: 1.5)),
-                        headerStyle: TextStyle(color: Colors.green,fontWeight: FontWeight.bold,),
+                        overlayScrollbarDecoration: ScrollbarThemeData(
+                          thumbVisibility: WidgetStatePropertyAll(true),
+                          thickness: WidgetStatePropertyAll(2),
+                          thumbColor: WidgetStatePropertyAll(Colors.lightBlue),
+                          crossAxisMargin: 2,
+                        ),
+                        searchFieldDecoration: SearchFieldDecoration(
+                            hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14,
+                                height: 1.5)),
+                        headerStyle: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
                         hintStyle: TextStyle(color: Colors.grey)),
                     onChanged: (value) {
                       if (value != null) {
-
                         controller.selectedMedicineModelDataSet.value = value;
-                        controller.nameController.text = value.tradeName??'';
-                        controller.medication.value.atcCode1 = value.atcCode1??'';
-                        controller.medication.value.name = value.tradeName??'';
-                        controller.medication.value.unit = value.unit??'';
+                        controller.nameController.text = value.tradeName ?? '';
+                        controller.medication.value.atcCode1 =
+                            value.atcCode1 ?? '';
+                        controller.medication.value.name =
+                            value.tradeName ?? '';
+                        controller.medication.value.unit = value.unit ?? '';
 
-                        controller.medication.value.atcCode1Interact = value.atcCode1Interact??'';
-                        controller.medication.value.atcCode2Interact = value.atcCode2Interact??'';
-                        controller.medication.value.timingGap1 = value.timingGap1??'';
-                        controller.medication.value.timingGap2 = value.timingGap2??'';
-                        controller.medication.value.major = value.major??'';
-                        controller.medication.value.moderate = value.moderate??'';
-                        controller.medication.value.minor = value.minor??'';
+                        controller.medication.value.atcCode1Interact =
+                            value.atcCode1Interact ?? '';
+                        controller.medication.value.atcCode2Interact =
+                            value.atcCode2Interact ?? '';
+                        controller.medication.value.timingGap1 =
+                            value.timingGap1 ?? '';
+                        controller.medication.value.timingGap2 =
+                            value.timingGap2 ?? '';
+                        controller.medication.value.major = value.major ?? '';
+                        controller.medication.value.moderate =
+                            value.moderate ?? '';
+                        controller.medication.value.minor = value.minor ?? '';
 
-
-
-                        controller.medication.value.unit = value.unit??'';
-
+                        controller.medication.value.unit = value.unit ?? '';
 
                         controller.nameController.text = value.tradeName!;
-                        controller.totalQuantityController.text = value.packageSize.toString();
+                        controller.totalQuantityController.text =
+                            value.packageSize.toString();
                         String packageSize = value.packageSize!;
-                        String numericValue = packageSize.replaceAll(RegExp(r'[^0-9]'), '');
+                        String numericValue =
+                            packageSize.replaceAll(RegExp(r'[^0-9]'), '');
 
                         controller.totalQuantityController.text = numericValue;
                         // controller.prescriptionController.text = value.constraint??'';
-                        controller.unitController.text = value.unit??'';
+                        controller.unitController.text = value.unit ?? '';
 
-                        controller.medication.value.imageUrl = value.photoLink??'';
+                        controller.medication.value.imageUrl =
+                            value.photoLink ?? '';
                         print("Selected Medicine: ${value.tradeName}");
                         print("ATC Code 1: ${value.atcCode1}");
                         print("Constraint: ${value.constraint}");
                         print("Photo Link: ${value.photoLink}");
                         // controller.update();
-                        if(controller.nameController.text.isNotEmpty&&controller.showErrorEnterMedicationName.isTrue){
+                        if (controller.nameController.text.isNotEmpty &&
+                            controller.showErrorEnterMedicationName.isTrue) {
                           controller.showErrorEnterMedicationName.value = false;
                         }
-                         if(controller.totalQuantityController.text.isNotEmpty&&controller.showErrorEnterMedicationQuantity.isTrue){
-                          controller.showErrorEnterMedicationQuantity.value = false;
+                        if (controller
+                                .totalQuantityController.text.isNotEmpty &&
+                            controller
+                                .showErrorEnterMedicationQuantity.isTrue) {
+                          controller.showErrorEnterMedicationQuantity.value =
+                              false;
                         }
-
                       }
                     },
                     controller: controller.medicineCtrl,
@@ -349,28 +400,40 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
 
                         leading: item.photoLink != null
                             ? CachedNetworkImage(
-                          imageUrl: item.photoLink!,
-                          width: 50, // عرض الصورة
-                          height: 50, // ارتفاع الصورة
-                          fit: BoxFit.cover, // تغطية المساحة المحددة
-                          placeholder: (context, url) => const CircularProgressIndicator(), // مؤشر تحميل أثناء جلب الصورة
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.medication,
-                            size: 50,
-                            color: Colors.grey, // إذا فشل تحميل الصورة، نعرض أيقونة بديلة
-                          ),
-                        )
+                                imageUrl: item.photoLink!,
+                                width: 50,
+                                // عرض الصورة
+                                height: 50,
+                                // ارتفاع الصورة
+                                fit: BoxFit.cover,
+                                // تغطية المساحة المحددة
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                // مؤشر تحميل أثناء جلب الصورة
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                  Icons.medication,
+                                  size: 50,
+                                  color: Colors
+                                      .grey, // إذا فشل تحميل الصورة، نعرض أيقونة بديلة
+                                ),
+                              )
                             : const Icon(
-                          Icons.medication,
-                          size: 50,
-                          color: Colors.grey, // أيقونة افتراضية عند عدم وجود رابط صورة
-                        ),
+                                Icons.medication,
+                                size: 50,
+                                color: Colors
+                                    .grey, // أيقونة افتراضية عند عدم وجود رابط صورة
+                              ),
                         // إذا لم يكن هناك رابط صورة
                         title: Text(item.tradeName ?? 'No Trade Name'),
                         subtitle: Container(
-                          // color: Colors.red,
-                            child: Text("ATC Code: ${item.atcCode1 ?? 'No ATC Code'}",
-                              style: TextStyle(fontSize: 12,color: Colors.blueGrey),textAlign: TextAlign.start,)),
+                            // color: Colors.red,
+                            child: Text(
+                          "ATC Code: ${item.atcCode1 ?? 'No ATC Code'}",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.blueGrey),
+                          textAlign: TextAlign.start,
+                        )),
                       );
                     },
                   ),
@@ -397,7 +460,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                   //   ),
                   // ):SizedBox.shrink()),
 
-                  buildErrorMessage(showErrorFlag: controller.showErrorEnterMedicationName, errorMessage: 'please_enter_medication_name'.tr),
+                  buildErrorMessage(
+                      showErrorFlag: controller.showErrorEnterMedicationName,
+                      errorMessage: 'please_enter_medication_name'.tr),
 
                   _buildOptionalMedicationNameField(),
                   const SizedBox(height: 24),
@@ -408,13 +473,20 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
 
                   const SizedBox(height: 24),
                   _buildExpiryDateField(),
-                  buildErrorMessage(showErrorFlag: controller.showErrorEnterExpiryDate, errorMessage: 'please_enter_expiry_date'.tr,top: 12),
+                  buildErrorMessage(
+                      showErrorFlag: controller.showErrorEnterExpiryDate,
+                      errorMessage: 'please_enter_expiry_date'.tr,
+                      top: 12),
 
-                  if(controller.selectedMedicineModelDataSet.value!=null)...[
-
+                  if (controller.selectedMedicineModelDataSet.value !=
+                      null) ...[
                     const SizedBox(height: 12),
-                  _buildSectionTitle(Get.locale?.languageCode == 'ar'?'تعليمات':'Constraint', Icons.info_outline),
-                  const SizedBox(height: 12),
+                    _buildSectionTitle(
+                        Get.locale?.languageCode == 'ar'
+                            ? 'تعليمات'
+                            : 'Constraint',
+                        Icons.info_outline),
+                    const SizedBox(height: 12),
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -438,18 +510,24 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                         vertical: 16,
                       ), //
                       child: Text(
-                        controller.selectedMedicineModelDataSet.value!.constraint?.toString() ??
-                            (AppHelper.isArabic ? 'لا توجد تعليمات' : 'No instructions available'),
+                        controller
+                                .selectedMedicineModelDataSet.value!.constraint
+                                ?.toString() ??
+                            (AppHelper.isArabic
+                                ? 'لا توجد تعليمات'
+                                : 'No instructions available'),
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                         ),
-                      )
-                      ,
+                      ),
                     ),
-
                     const SizedBox(height: 12),
-                    _buildSectionTitle(Get.locale?.languageCode == 'ar'?'وحدة الدواء':'Medication Unit', CupertinoIcons.capsule),
+                    _buildSectionTitle(
+                        Get.locale?.languageCode == 'ar'
+                            ? 'وحدة الدواء'
+                            : 'Medication Unit',
+                        CupertinoIcons.capsule),
                     const SizedBox(height: 12),
                     Container(
                       width: double.infinity,
@@ -474,16 +552,15 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                         vertical: 16,
                       ), //
                       child: Text(
-                        controller.selectedMedicineModelDataSet.value!.unit?.toString() ??
+                        controller.selectedMedicineModelDataSet.value!.unit
+                                ?.toString() ??
                             (AppHelper.isArabic ? 'غير محدد' : 'Not specified'),
                         style: TextStyle(
-                          fontWeight: FontWeight.normal,//
+                          fontWeight: FontWeight.normal, //
                           fontSize: 16,
                         ),
-                      )
-                      ,
+                      ),
                     ),
-
                   ],
                   const SizedBox(height: 24),
 
@@ -542,7 +619,11 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
           AppHelper.isArabic
               ? ' يجب عليك تحديد ${controller.repeatedDays.value}  لتذكيرات تناول الدواء'
               : 'You need to set ${controller.repeatedDays.value} reminders for medication intake.',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.normal,height: 2,fontSize: 15 ),
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+              height: 2,
+              fontSize: 15),
         );
 
         // return Text(
@@ -562,28 +643,37 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
       crossAxisSpacing: 12,
       childAspectRatio: 2.5,
       children: [
-        _buildReminderTypeCard(ReminderType.wakeUp, 'wake_up'.tr, Icons.wb_sunny),
-        _buildReminderTypeCard(ReminderType.beforeBreakfast, 'before_breakfast'.tr, Icons.arrow_upward),
-        _buildReminderTypeCard(ReminderType.afterBreakfast, 'after_breakfast'.tr, Icons.arrow_downward),
-        _buildReminderTypeCard(ReminderType.beforeLunch, 'before_lunch'.tr, Icons.arrow_upward),
-        _buildReminderTypeCard(ReminderType.afterLunch, 'after_lunch'.tr, Icons.arrow_downward),
-        _buildReminderTypeCard(ReminderType.beforeDinner, 'before_dinner'.tr, Icons.arrow_upward),
-        _buildReminderTypeCard(ReminderType.afterDinner, 'after_dinner'.tr, Icons.arrow_downward),
-        _buildReminderTypeCard(ReminderType.bedtime, 'bedtime'.tr, Icons.nightlight),
+        _buildReminderTypeCard(
+            ReminderType.wakeUp, 'wake_up'.tr, Icons.wb_sunny),
+        _buildReminderTypeCard(ReminderType.beforeBreakfast,
+            'before_breakfast'.tr, Icons.arrow_upward),
+        _buildReminderTypeCard(ReminderType.afterBreakfast,
+            'after_breakfast'.tr, Icons.arrow_downward),
+        _buildReminderTypeCard(
+            ReminderType.beforeLunch, 'before_lunch'.tr, Icons.arrow_upward),
+        _buildReminderTypeCard(
+            ReminderType.afterLunch, 'after_lunch'.tr, Icons.arrow_downward),
+        _buildReminderTypeCard(
+            ReminderType.beforeDinner, 'before_dinner'.tr, Icons.arrow_upward),
+        _buildReminderTypeCard(
+            ReminderType.afterDinner, 'after_dinner'.tr, Icons.arrow_downward),
+        _buildReminderTypeCard(
+            ReminderType.bedtime, 'bedtime'.tr, Icons.nightlight),
       ],
     );
   }
 
-  Widget _buildReminderTypeCard(ReminderType type, String label, IconData icon) {
+  Widget _buildReminderTypeCard(
+      ReminderType type, String label, IconData icon) {
     return Obx(() {
       final bool isSelected = controller.reminders.any((r) => r.type == type);
       return InkWell(
         onTap: () {
           // تحقق من طول القائمة مقارنة بقيمة repeatCountController
-          final int maxReminders = int.tryParse(controller.repeatCountController.text) ?? 0;
+          final int maxReminders =
+              int.tryParse(controller.repeatCountController.text) ?? 0;
 
           if (!isSelected && controller.reminders.length >= maxReminders) {
-
             SnackbarService().showWarning("alert_message_repeat_limit".tr);
             return;
           }
@@ -591,7 +681,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
           // todo :: controller.newInteractions.clear();
           controller.newInteractions.clear();
           if (isSelected) {
-            controller.removeReminder(controller.reminders.indexWhere((r) => r.type == type));
+            controller.removeReminder(
+                controller.reminders.indexWhere((r) => r.type == type));
           } else {
             controller.addReminder(TimeOfDay.now(), type: type);
           }
@@ -603,7 +694,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.white,
+            color:
+                isSelected ? AppColors.primary.withOpacity(0.1) : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected ? AppColors.primary : Colors.grey.shade300,
@@ -635,8 +727,10 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                       label,
                       style: GoogleFonts.poppins(
                         fontSize: 12,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                        color: isSelected ? AppColors.primary : AppColors.textDark,
+                        fontWeight:
+                            isSelected ? FontWeight.w600 : FontWeight.normal,
+                        color:
+                            isSelected ? AppColors.primary : AppColors.textDark,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -651,7 +745,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        controller.removeReminder(controller.reminders.indexWhere((r) => r.type == type));
+                        controller.removeReminder(controller.reminders
+                            .indexWhere((r) => r.type == type));
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
@@ -686,17 +781,13 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             initialTime: TimeOfDay.now(),
           );
           if (time != null) {
+            final int maxReminders =
+                int.tryParse(controller.repeatCountController.text) ?? 0;
 
-
-          
-            final int maxReminders = int.tryParse(controller.repeatCountController.text) ?? 0;
-
-            if ( controller.reminders.length >= maxReminders) {
-
+            if (controller.reminders.length >= maxReminders) {
               SnackbarService().showWarning("alert_message_repeat_limit".tr);
               return;
             }
-
 
             //==================
             controller.onTimeSelected(time);
@@ -794,7 +885,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
   // TODO :: _buildSaveButton
   Widget _buildSaveButton() {
     return InkWell(
-      onTap: controller.isEditing.value ? controller.onUpdatePressed : controller.onSavePressed,
+      onTap: controller.isEditing.value
+          ? controller.onUpdatePressed
+          : controller.onSavePressed,
       child: Container(
         height: 50,
         decoration: BoxDecoration(
@@ -804,7 +897,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
         child: Center(
           child: Text(
             controller.isEditing.value ? 'update'.tr : 'save'.tr,
-            style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -822,7 +916,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
         ),
         title: Obx(() {
           return Text(
-            (controller.isEditing.value ? 'edit_medication'.tr : 'add_medication'.tr),
+            (controller.isEditing.value
+                ? 'edit_medication'.tr
+                : 'add_medication'.tr),
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -845,7 +941,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
       child: Column(
         children: [
           Text(
-            controller.isEditing.value ? 'update_medication_details'.tr : 'add_new_medication'.tr,
+            controller.isEditing.value
+                ? 'update_medication_details'.tr
+                : 'add_new_medication'.tr,
             style: GoogleFonts.poppins(
               color: Colors.white.withOpacity(0.9),
               fontSize: 16,
@@ -991,7 +1089,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
               child: TextField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')), // السماح بالأرقام فقط (غير سالبة)
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'^[0-9]*$')), // السماح بالأرقام فقط (غير سالبة)
                 ],
                 // onChanged: (value) => controller.repeatedDays(int.parse(value)??1),
                 onChanged: (value) {
@@ -999,7 +1098,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                   if (value.isNotEmpty) {
                     controller.repeatedDays(int.parse(value));
                   } else {
-                    controller.repeatedDays(1); // يمكنك تحديد القيمة الافتراضية هنا
+                    controller
+                        .repeatedDays(1); // يمكنك تحديد القيمة الافتراضية هنا
                   }
                   controller.showErrorEnterRepeatTime.value = false;
                 },
@@ -1014,9 +1114,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                 ),
               ),
             ),
-
-            buildErrorMessage(showErrorFlag: controller.showErrorEnterRepeatTime, errorMessage: 'please_enter_repeat_time'.tr),
-
+            buildErrorMessage(
+                showErrorFlag: controller.showErrorEnterRepeatTime,
+                errorMessage: 'please_enter_repeat_time'.tr),
           ],
         )
       ],
@@ -1173,8 +1273,6 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
     });
   }
 
-
-
   Widget _buildQuantityFields() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1190,7 +1288,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                 onChanged: (value) {
                   controller.showErrorEnterMedicationQuantity.value = false;
                 },
-                decoration: _buildInputDecoration('total_quantity'.tr, Icons.medication_outlined),
+                decoration: _buildInputDecoration(
+                    'total_quantity'.tr, Icons.medication_outlined),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'quantity_required'.tr;
@@ -1204,11 +1303,13 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             ),
             // const SizedBox(height: 8),
             buildErrorMessage(
-                showErrorFlag: controller.showErrorEnterMedicationQuantity, errorMessage: 'please_enter_medication_quantity'.tr, top: 12),
+                showErrorFlag: controller.showErrorEnterMedicationQuantity,
+                errorMessage: 'please_enter_medication_quantity'.tr,
+                top: 12),
 
             const SizedBox(height: 12),
             _buildSectionTitle('dose_amount'.tr, Icons.ac_unit_rounded),
-        
+
             const SizedBox(height: 12),
             _buildInputContainer(
               child: TextFormField(
@@ -1217,7 +1318,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                 onChanged: (value) {
                   controller.showErrorEnterDoseQuantity.value = false;
                 },
-                decoration: _buildInputDecoration('dose_amount'.tr, Icons.local_hospital_outlined),
+                decoration: _buildInputDecoration(
+                    'dose_amount'.tr, Icons.local_hospital_outlined),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'required'.tr;
@@ -1230,7 +1332,10 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
               ),
             ),
 
-            buildErrorMessage(showErrorFlag: controller.showErrorEnterDoseQuantity, errorMessage: "please_enter_dose_quantity".tr, top: 12),
+            buildErrorMessage(
+                showErrorFlag: controller.showErrorEnterDoseQuantity,
+                errorMessage: "please_enter_dose_quantity".tr,
+                top: 12),
           ],
         ),
       ],
@@ -1249,11 +1354,13 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             onTap: () async {
               final date = await showDatePicker(
                 context: Get.context!,
-                initialDate: DateTime.now().add(const Duration(days: 1)), // يبدأ من الغد
-                firstDate: DateTime.now().add(const Duration(days: 1)), // يمنع اختيار أي تاريخ قبل اليوم
-                lastDate: DateTime.now().add(const Duration(days: 3650)), // الحد الأقصى للتاريخ بعد 10 سنوات
+                initialDate:
+                    DateTime.now().add(const Duration(days: 1)), // يبدأ من الغد
+                firstDate: DateTime.now().add(
+                    const Duration(days: 1)), // يمنع اختيار أي تاريخ قبل اليوم
+                lastDate: DateTime.now().add(const Duration(
+                    days: 3650)), // الحد الأقصى للتاريخ بعد 10 سنوات
               );
-             
 
               if (date != null) {
                 controller.expiryDate.value = date;
@@ -1261,7 +1368,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
               }
             },
             child: Obx(() => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   child: Row(
                     children: [
                       Icon(
@@ -1275,7 +1383,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                             : 'select_expiry_date'.tr,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
-                          color: controller.expiryDate.value != null ? AppColors.text : AppColors.textLight,
+                          color: controller.expiryDate.value != null
+                              ? AppColors.text
+                              : AppColors.textLight,
                         ),
                       ),
                     ],
@@ -1286,7 +1396,6 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
       ],
     );
   }
-
 
   Widget _buildPrescriptionSection() {
     return Column(
@@ -1299,7 +1408,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             controller: controller.prescriptionController,
             minLines: 5,
             maxLines: 10,
-            decoration: _buildInputDecoration('prescription'.tr, Icons.description),
+            decoration:
+                _buildInputDecoration('prescription'.tr, Icons.description),
           ),
         ),
         const SizedBox(height: 16),
@@ -1358,7 +1468,8 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
             child: ElevatedButton.icon(
               onPressed: () async {
                 final picker = ImagePicker();
-                final image = await picker.pickImage(source: ImageSource.gallery);
+                final image =
+                    await picker.pickImage(source: ImageSource.gallery);
                 if (image != null) {
                   final bytes = await image.readAsBytes();
                   final base64Image = base64Encode(bytes);
@@ -1371,7 +1482,9 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
                 color: Colors.white,
               ),
               label: Text(
-                hasImage ? 'change_prescription_image'.tr : 'add_prescription_image'.tr,
+                hasImage
+                    ? 'change_prescription_image'.tr
+                    : 'add_prescription_image'.tr,
                 style: const TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
@@ -1389,106 +1502,200 @@ borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.ci
   }
 
   Widget _buildInteractionsSection() {
-  Get.put(NewInteractionService());
-   final controller = Get.find<AddMedicationController>();
-  //Get.put(NewInteractionResult);
-  //List<NewInteractionResult> interactions = await NewInteractionChecker.checkInteractions111
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _buildSectionTitle('interactions'.tr, Icons.warning_amber_rounded),
-      const SizedBox(height: 12),
+    Get.put(NewInteractionService());
+    final controller = Get.find<AddMedicationController>();
+    //Get.put(NewInteractionResult);
+    //List<NewInteractionResult> interactions = await NewInteractionChecker.checkInteractions111
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle('interactions'.tr, Icons.warning_amber_rounded),
+        const SizedBox(height: 12),
         Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Obx(() {
-          
-            final newInteractions = controller.newInteractions;
-            if (newInteractions.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.check_circle_outline,
-                      size: 48,
-                      color: Colors.grey.shade400,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'No interactions'.tr,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 15,
+                  offset: const Offset(0, 4),
                 ),
+              ],
+            ),
+            child: Obx(() {
+              final newInteractions = controller.newInteractions;
+              if (newInteractions.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 48,
+                        color: Colors.grey.shade400,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'No interactions'.tr,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              final newInteractionService = Get.find<NewInteractionService>();
+
+              // استدعاء الدالة المعدلة
+              final result = newInteractionService.findOptimalSchedule(
+                  controller.reminders, controller.listFetchAllReminders ?? []);
+              final schedule =
+                  result['schedule'] as Map<String, List<DateTime>>;
+              final interactions =
+                  result['interactions'] as List<NewInteractionModel>;
+
+              // تحديث القائمة في الـ controller
+              controller.newInteractions.assignAll(interactions);
+
+              // تجميع التفاعلات لنفس الدواء
+              final groupedInteractions =
+                  _groupInteractionsByMedication(newInteractions);
+
+              // معرف الدواء الجديد (افتراضيًا أول دواء في القائمة)
+              final newMedicationId =
+                  controller.reminders.first.medicineModelDataSet?.id ??
+                      "Unknown";
+
+              return Column(
+                children: groupedInteractions.entries.map((entry) {
+                  final medicationName = entry.key;
+                  final interactions = entry.value;
+                  return _buildInteractionItem(
+                      medicationName, interactions, schedule, newMedicationId);
+                }).toList(),
               );
-            }
-            
-            final newInteractionService = Get.find<NewInteractionService>();
-          
-  controller.medicationsSchedule= newInteractionService.findOptimalSchedule(controller.reminders,controller.listFetchAllReminders??[]);
-  final schedule = controller.medicationsSchedule??{};
+            }) //
+            // child: Obx(() {
+            //   final newInteractions = controller.newInteractions;
+            //   if (newInteractions.isEmpty) {
+            //     return Center(
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Icon(
+            //             Icons.check_circle_outline,
+            //             size: 48,
+            //             color: Colors.grey.shade400,
+            //           ),
+            //           const SizedBox(height: 12),
+            //           Text(
+            //             'No interactions'.tr,
+            //             textAlign: TextAlign.center,
+            //             style: GoogleFonts.poppins(
+            //               fontSize: 16,
+            //               color: Colors.grey.shade600,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     );
+            //   }
+            //
+            //   final newInteractionService = Get.find<NewInteractionService>();
+            //
+            //   // استدعاء الدالة المعدلة
+            //   final result = newInteractionService.findOptimalSchedule(controller.reminders, controller.listFetchAllReminders ?? []);
+            //   final schedule = result['schedule'] as Map<String, List<DateTime>>;
+            //   final interactions = result['interactions'] as List<NewInteractionModel>;
+            //
+            //   // تحديث القائمة في الـ controller
+            //   controller.newInteractions.assignAll(interactions);
+            //
+            //   // تجميع التفاعلات لنفس الدواء
+            //   final groupedInteractions = _groupInteractionsByMedication(newInteractions);
+            //
+            //   return Column(
+            //     children: groupedInteractions.entries.map((entry) {
+            //       final medicationName = entry.key;
+            //       final interactions = entry.value;
+            //       return _buildInteractionItem3(medicationName, interactions, schedule);
+            //     }).toList(),
+            //   );
+            // })
 
-            print("Total interactions: ${newInteractions.length}");
-            print("Generated schedule: $schedule");
-            print("controller.existingMedications ${controller.existingMedications}");
-            print("controller.toMedication() ${controller.toMedication()}");
-
-        
-
-            // todo :: call _buildInteractionItem
- 
-            return Column(
-              
-              children: newInteractions.map((interaction) => _buildInteractionItem(interaction, schedule)).toList(),
-            );
-          }),
-        ),
+            ),
       ],
     );
   }
-  Widget _buildInteractionItem(NewInteractionModel interaction, Map<String, List<DateTime>> schedule) {
 
-  print("Displaying interaction: ${interaction.medicationName}");
-  print("Interaction Type: ${interaction.interactionType}");
-  
-  final recommendedTimes = schedule[interaction.medicationName] ?? [];
-print("Building interaction item for: ${interaction.medicationName}");
+  // دالة لتجميع التفاعلات حسب اسم الدواء لتجنب عرضهن بشكل مكرر
+  Map<String, List<NewInteractionModel>> _groupInteractionsByMedication(
+      List<NewInteractionModel> interactions) {
+    final groupedInteractions = <String, List<NewInteractionModel>>{};
 
-    // تحديد اللون بناءً على نوع التفاعل
-    Color interactionColor;
-    String interactionDisplayName;
-    switch (interaction.interactionType) {
-      case 'Major':
-        interactionColor = Colors.red;
-        interactionDisplayName = 'High Risk';
-        break;
-      case 'Moderate':
-        interactionColor = Colors.orange;
-        interactionDisplayName = 'Moderate Risk';
-        break;
-      case 'Minor':
-        interactionColor = const Color.fromARGB(255, 228, 208, 26);
-        interactionDisplayName = 'Low Risk';
-        break;
-      default:
-        interactionColor = Colors.green;
-        interactionDisplayName = 'No Risk';
+    for (var interaction in interactions) {
+      final medicationName = interaction.medicationName;
+      if (!groupedInteractions.containsKey(medicationName)) {
+        groupedInteractions[medicationName] = [];
+      }
+      groupedInteractions[medicationName]!.add(interaction);
+    }
+
+    return groupedInteractions;
+  }
+
+  Widget _buildInteractionItem(
+    String medicationName,
+    List<NewInteractionModel> interactions,
+    Map<String, List<DateTime>> schedule,
+    String newMedicationId, // معرف الدواء الجديد
+  ) {
+    print("\n\n================================\n\n");
+    print("- Displaying interaction for: $medicationName\n\n");
+
+    // التحقق مما إذا كان الدواء الحالي هو الدواء الجديد
+    final isNewMedication = interactions
+        .any((interaction) => interaction.medicationId == newMedicationId);
+
+    // عرض الأوقات الآمنة فقط للدواء الجديد
+    final recommendedTimes =
+        isNewMedication ? schedule[medicationName] ?? [] : [];
+    print("- Building interaction item for: $medicationName\n\n");
+    print("- recommendedTimes: $recommendedTimes\n\n");
+
+    print("\n\n================================\n\n");
+
+    // تحديد اللون بناءً على أعلى مستوى خطر
+    Color interactionColor = Colors.green;
+    String interactionDisplayName = 'No Risk';
+
+    for (var interaction in interactions) {
+      switch (interaction.interactionType.toLowerCase()) {
+        case 'major':
+          interactionColor = Colors.red;
+          interactionDisplayName = 'High Risk';
+          break;
+        case 'moderate':
+          if (interactionDisplayName != 'High Risk') {
+            interactionColor = Colors.orange;
+            interactionDisplayName = 'Moderate Risk';
+          }
+          break;
+        case 'minor':
+          if (interactionDisplayName != 'High Risk' &&
+              interactionDisplayName != 'Moderate Risk') {
+            interactionColor = const Color.fromARGB(255, 228, 208, 26);
+            interactionDisplayName = 'Low Risk';
+          }
+          break;
+      }
     }
 
     return Card(
@@ -1508,7 +1715,7 @@ print("Building interaction item for: ${interaction.medicationName}");
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    interaction.medicationName,
+                    medicationName,
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -1516,7 +1723,8 @@ print("Building interaction item for: ${interaction.medicationName}");
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: interactionColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -1533,10 +1741,96 @@ print("Building interaction item for: ${interaction.medicationName}");
               ],
             ),
             const SizedBox(height: 8),
-            Text(
-              interaction.description ?? 'No description available.',
-              style: GoogleFonts.poppins(fontSize: 14),
-            ),
+            ...interactions.map((interaction) {
+              final isLastInteraction = interactions.last == interaction;
+              Color interactionColor2 = Colors.green;
+              String interactionDisplayName2 = 'No Risk';
+
+              // for (var interaction in interactions) {
+              switch (interaction.interactionType.toLowerCase()) {
+                case 'major':
+                  interactionColor2 = Colors.red;
+                  interactionDisplayName2 = 'High Risk';
+                  break;
+                case 'moderate':
+                  if (interactionDisplayName2 != 'High Risk') {
+                    interactionColor2 = Colors.orange;
+                    interactionDisplayName2 = 'Moderate Risk';
+                  }
+                  break;
+                case 'minor':
+                  if (interactionDisplayName2 != 'High Risk' &&
+                      interactionDisplayName2 != 'Moderate Risk') {
+                    interactionColor2 = const Color.fromARGB(223, 230, 211, 0);
+                    interactionDisplayName2 = 'Low Risk';
+                  }
+                  break;
+              }
+              // }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: interactionColor2.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      interactionDisplayName2,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: interactionColor2,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: "Interaction between ",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: interaction.medicationName,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue, // لون اسم الدواء الأول
+                          ),
+                        ),
+                        const TextSpan(
+                          text: " and ",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: interaction.interactingMedicationName,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: interactionColor2, // لون اسم الدواء الثاني
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isLastInteraction) // إضافة Divider إذا لم يكن التفاعل الأخير
+                    const Divider(
+                      height: 16,
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                ],
+              );
+            }).toList(),
             if (recommendedTimes.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
@@ -1551,13 +1845,13 @@ print("Building interaction item for: ${interaction.medicationName}");
                 children: recommendedTimes
                     .map(
                       (time) => Chip(
-                    label: Text(
-                      intl.DateFormat('hh:mm a').format(time),
-                      style: GoogleFonts.poppins(fontSize: 12),
-                    ),
-                    backgroundColor: AppColors.primary.withOpacity(0.1),
-                  ),
-                )
+                        label: Text(
+                          intl.DateFormat('hh:mm a').format(time),
+                          style: GoogleFonts.poppins(fontSize: 12),
+                        ),
+                        backgroundColor: AppColors.primary.withOpacity(0.1),
+                      ),
+                    )
                     .toList(),
               ),
             ],
@@ -1566,7 +1860,7 @@ print("Building interaction item for: ${interaction.medicationName}");
       ),
     );
   }
-  
+
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [
@@ -1643,15 +1937,21 @@ print("Building interaction item for: ${interaction.medicationName}");
     final isArabic = Get.locale?.languageCode == 'ar';
 
     return Obx(() => Column(
-          crossAxisAlignment: isArabic ? CrossAxisAlignment.start : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isArabic ? CrossAxisAlignment.start : CrossAxisAlignment.start,
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           children: [
             Container(
               child: Row(
                 children: [
-                  Icon(Icons.repeat, size: 24,
-                    color: AppColors.primary,),
-                  const SizedBox(width: 10,),
+                  Icon(
+                    Icons.repeat,
+                    size: 24,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Text(
                     'frequency'.tr,
                     style: GoogleFonts.poppins(
@@ -1673,19 +1973,28 @@ print("Building interaction item for: ${interaction.medicationName}");
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.selectedReminderFrequency.value = ReminderFrequency.daily;
-                        print("ReminderFrequency.daily");//
+                        controller.selectedReminderFrequency.value =
+                            ReminderFrequency.daily;
+                        print("ReminderFrequency.daily"); //
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: controller.selectedReminderFrequency.value == ReminderFrequency.daily ? AppColors.primary : Colors.white,
+                          color: controller.selectedReminderFrequency.value ==
+                                  ReminderFrequency.daily
+                              ? AppColors.primary
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: controller.selectedReminderFrequency.value == ReminderFrequency.daily ? AppColors.primary : Colors.grey.shade300,
+                            color: controller.selectedReminderFrequency.value ==
+                                    ReminderFrequency.daily
+                                ? AppColors.primary
+                                : Colors.grey.shade300,
                             width: 1.5,
                           ),
-                          boxShadow: controller.selectedReminderFrequency.value == ReminderFrequency.daily
+                          boxShadow: controller
+                                      .selectedReminderFrequency.value ==
+                                  ReminderFrequency.daily
                               ? [
                                   BoxShadow(
                                     color: AppColors.primary.withOpacity(0.3),
@@ -1700,15 +2009,26 @@ print("Building interaction item for: ${interaction.medicationName}");
                           children: [
                             Icon(
                               Icons.calendar_today,
-                              color: controller.selectedReminderFrequency.value == ReminderFrequency.daily ? Colors.white : Colors.grey.shade800,
+                              color:
+                                  controller.selectedReminderFrequency.value ==
+                                          ReminderFrequency.daily
+                                      ? Colors.white
+                                      : Colors.grey.shade800,
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'daily'.tr,
                               style: GoogleFonts.poppins(
-                                color: controller.selectedReminderFrequency.value == ReminderFrequency.daily ? Colors.white : Colors.grey.shade800,
-                                fontWeight:
-                                    controller.selectedReminderFrequency.value == ReminderFrequency.daily ? FontWeight.w600 : FontWeight.normal,
+                                color: controller
+                                            .selectedReminderFrequency.value ==
+                                        ReminderFrequency.daily
+                                    ? Colors.white
+                                    : Colors.grey.shade800,
+                                fontWeight: controller
+                                            .selectedReminderFrequency.value ==
+                                        ReminderFrequency.daily
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
                               ),
                             ),
                           ],
@@ -1720,19 +2040,27 @@ print("Building interaction item for: ${interaction.medicationName}");
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        controller.selectedReminderFrequency.value = ReminderFrequency.custom;
-
+                        controller.selectedReminderFrequency.value =
+                            ReminderFrequency.custom;
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: controller.selectedReminderFrequency.value == ReminderFrequency.custom ? AppColors.primary : Colors.white,
+                          color: controller.selectedReminderFrequency.value ==
+                                  ReminderFrequency.custom
+                              ? AppColors.primary
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: controller.selectedReminderFrequency.value == ReminderFrequency.custom ? AppColors.primary : Colors.grey.shade300,
+                            color: controller.selectedReminderFrequency.value ==
+                                    ReminderFrequency.custom
+                                ? AppColors.primary
+                                : Colors.grey.shade300,
                             width: 1.5,
                           ),
-                          boxShadow: controller.selectedReminderFrequency.value == ReminderFrequency.custom
+                          boxShadow: controller
+                                      .selectedReminderFrequency.value ==
+                                  ReminderFrequency.custom
                               ? [
                                   BoxShadow(
                                     color: AppColors.primary.withOpacity(0.3),
@@ -1747,15 +2075,26 @@ print("Building interaction item for: ${interaction.medicationName}");
                           children: [
                             Icon(
                               Icons.calendar_month,
-                              color: controller.selectedReminderFrequency.value == ReminderFrequency.custom ? Colors.white : Colors.grey.shade800,
+                              color:
+                                  controller.selectedReminderFrequency.value ==
+                                          ReminderFrequency.custom
+                                      ? Colors.white
+                                      : Colors.grey.shade800,
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'custom'.tr,
                               style: GoogleFonts.poppins(
-                                color: controller.selectedReminderFrequency.value == ReminderFrequency.custom ? Colors.white : Colors.grey.shade800,
-                                fontWeight:
-                                    controller.selectedReminderFrequency.value == ReminderFrequency.custom ? FontWeight.w600 : FontWeight.normal,
+                                color: controller
+                                            .selectedReminderFrequency.value ==
+                                        ReminderFrequency.custom
+                                    ? Colors.white
+                                    : Colors.grey.shade800,
+                                fontWeight: controller
+                                            .selectedReminderFrequency.value ==
+                                        ReminderFrequency.custom
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
                               ),
                             ),
                           ],
@@ -1766,7 +2105,8 @@ print("Building interaction item for: ${interaction.medicationName}");
                 ],
               );
             }),
-            if (controller.selectedReminderFrequency.value == ReminderFrequency.custom) ...[
+            if (controller.selectedReminderFrequency.value ==
+                ReminderFrequency.custom) ...[
               const SizedBox(height: 24),
               Text(
                 'repeat_ech'.tr,
@@ -1786,7 +2126,8 @@ print("Building interaction item for: ${interaction.medicationName}");
                       controller: controller.repeatEveryController,
                       keyboardType: TextInputType.number,
                       textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      textDirection:
+                          isArabic ? TextDirection.rtl : TextDirection.ltr,
                       decoration: InputDecoration(
                         hintText: 'number'.tr,
                         border: OutlineInputBorder(
@@ -1808,15 +2149,21 @@ print("Building interaction item for: ${interaction.medicationName}");
                       child: DropdownButton<TimeUnit>(
                         value: controller.selectedTimeUnit.value,
                         isExpanded: true,
-                        alignment: isArabic ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+                        alignment: isArabic
+                            ? AlignmentDirectional.centerEnd
+                            : AlignmentDirectional.centerStart,
                         underline: const SizedBox(),
                         items: TimeUnit.values
                             .map((unit) => DropdownMenuItem(
                                   value: unit,
-                                  alignment: isArabic ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+                                  alignment: isArabic
+                                      ? AlignmentDirectional.centerEnd
+                                      : AlignmentDirectional.centerStart,
                                   child: Text(
                                     unit.name.tr,
-                                    textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                                    textAlign: isArabic
+                                        ? TextAlign.right
+                                        : TextAlign.left,
                                   ),
                                 ))
                             .toList(),
@@ -1830,59 +2177,7 @@ print("Building interaction item for: ${interaction.medicationName}");
                   ),
                 ],
               ),
-              // const SizedBox(height: 24),
-              // Obx(() {
-              //   return Text(
-              //     '${controller.getCustomFrequencyDescription()}'.tr,
-              //     style: GoogleFonts.poppins(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w600,
-              //       color: Colors.grey.shade800,
-              //     ),
-              //     textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              //   );
-              // }),
-              // const SizedBox(height: 12),
-              // Row(
-              //   textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              //   children: [
-              //     Expanded(
-              //       flex: 2,
-              //       child: TextField(
-              //         onChanged: (value) => controller.repeatedDays(int.parse(value)),
-              //         keyboardType: TextInputType.number,
-              //         textAlign: isArabic ? TextAlign.right : TextAlign.left,
-              //         textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              //         decoration: InputDecoration(
-              //           hintText: 'number'.tr,
-              //           border: OutlineInputBorder(
-              //             borderRadius: BorderRadius.circular(12),
-              //             borderSide: BorderSide(color: Colors.grey.shade300),
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 12),
-              //     Expanded(
-              //       flex: 3,
-              //       child: Container(
-              //         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-              //         decoration: BoxDecoration(
-              //           border: Border.all(color: Colors.grey.shade300),
-              //           borderRadius: BorderRadius.circular(12),
-              //         ),
-              //         child: Text(
-              //           'days'.tr,
-              //           textAlign: isArabic ? TextAlign.right : TextAlign.left,
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 16,
-              //             color: Colors.grey.shade800,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
+             
             ],
           ],
         ));

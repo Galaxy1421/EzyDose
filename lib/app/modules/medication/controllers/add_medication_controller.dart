@@ -472,7 +472,7 @@ class AddMedicationController extends GetxController {
 
   Future<void> checkAndShowInteractions(BuildContext context, MedicationModel medication) async {
     if (listFetchAllReminders != null) {
-      List<NewInteractionResult> listResult = await NewInteractionChecker.checkInteractions(medication, reminders,listFetchAllReminders!);
+      List<NewInteractionResult> listResult = await NewInteractionChecker.checkInteractions111(medication, reminders,listFetchAllReminders!);
 
       if (listResult.isNotEmpty) {
 
@@ -958,12 +958,7 @@ class AddMedicationController extends GetxController {
       Get.offAllNamed(Routes.INITIAL);
     } catch (e) {
       Get.back();
-      // Get.snackbar(
-      //   'Error',
-      //   'Failed to save medication: ${e.toString()}',
-      //   backgroundColor: Colors.red,
-      //   colorText: Colors.white,
-      // );
+     
       SnackbarService().showError(
           AppHelper.isArabic
               ? "فشل في حفظ الدواء: ${e.toString()}"
@@ -1053,7 +1048,7 @@ await fetchAllReminders();
 
 
       if (listFetchAllReminders != null){
-        List<NewInteractionResult> interactions = await NewInteractionChecker.checkInteractions(
+        List<NewInteractionResult> interactions = await NewInteractionChecker.checkInteractions111(
           medication,
           reminders,
           listFetchAllReminders!,
@@ -1095,12 +1090,7 @@ await fetchAllReminders();
 
       Get.offAllNamed(Routes.INITIAL);
     } catch (e) {
-      // Get.snackbar(
-      //   'Error',
-      //   'Failed to save medication: ${e.toString()}',
-      //   backgroundColor: Colors.red,
-      //   colorText: Colors.white,
-      // );
+     
       SnackbarService().showError(
           AppHelper.isArabic
               ? "فشل في حفظ الدواء: ${e.toString()}"
@@ -1189,29 +1179,13 @@ await fetchAllReminders();
       // Validate custom days
       final days = int.tryParse(customDaysController.text);
       if (days == null || days <= 0) {
-        // Get.snackbar(
-        //   'error'.tr,
-        //   'please_enter_valid_days'.tr,
-        //   backgroundColor: Colors.red,
-        //   colorText: Colors.white,
-        // );
+        
         SnackbarService().showError(
           'please_enter_valid_days'.tr,
         );
 
         return false;
       }
-
-      // Check if at least one day is selected
-      // if (!selectedDays.contains(true)) {
-      //   Get.snackbar(
-      //     'error'.tr,
-      //     'please_select_at_least_one_day'.tr,
-      //     backgroundColor: Colors.red,
-      //     colorText: Colors.white,
-      //   );
-      //   return false;
-      // }
     }
 
     return true;
