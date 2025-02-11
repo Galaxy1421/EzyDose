@@ -37,7 +37,7 @@ class InteractionModel2 {
 class NewInteractionService extends GetxService {
   final logger = Logger();
   final List<NewInteractionModel> interactionsList =
-      []; // قائمة لتخزين التفاعلات
+      []; 
 
   /// Implements minimum cost flow algorithm for medication interactions
   /// Returns optimal scheduling considering interaction risk
@@ -59,8 +59,7 @@ class NewInteractionService extends GetxService {
 
   Map<String, dynamic> findOptimalSchedule(
       List<ReminderModel> newReminders, List<ReminderModel> existingReminders) {
-    print(
-        "======================================\n\n\nStarting the scheduling process...");
+    print("======================================\n\n\nStarting the scheduling process...");
 
     interactionsList.clear(); // Clear the previous interactions
 
@@ -155,7 +154,7 @@ class NewInteractionService extends GetxService {
     final schedule = <String, List<DateTime>>{};
 
     final timeSlots =
-        List.generate(96, (i) => DateTime.now().add(Duration(minutes: i * 15)));
+    List.generate(96, (i) => DateTime.now().add(Duration(minutes: i * 15)));
     print("⏳ Created 96 time slots (15-minute intervals).");
 
     final occupiedSlots = <int>{};
@@ -182,7 +181,7 @@ for (final reminder in existingReminders) {
       occupiedSlots.add(slotIndex);
       print("🔗 Found existing reminder: "
           "${reminder.medicationName} at ${_formatTime(reminderTime)} "
-          "(slot $slotIndex)");
+          "(slot $slotIndex) so add it to Occupied slots");
     } else {
       print("⚠️ Skipping reminder beyond 24h: "
           "${reminder.medicationName} at ${_formatTime(reminderTime)}");
@@ -214,7 +213,7 @@ print("📊 Occupied slots after processing: $occupiedSlots");
        
        final nearestGap = occupiedSlots.isNotEmpty 
       ? occupiedSlots.map((o) => (i - o).abs() * 15).reduce(min)
-      : 1440; // 24h إذا لم توجد تذكيرات
+      : 1440; 
   
         final isSlotSafe = nearestGap >= minInterval;
 

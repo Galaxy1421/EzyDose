@@ -96,49 +96,6 @@ class DialogFb3 extends StatelessWidget {
 //================================
 //================================
 
-//
-// class CustomDropdownExample extends StatefulWidget {
-//   const CustomDropdownExample({super.key});
-//
-//   @override
-//   State<CustomDropdownExample> createState() => _CustomDropdownExampleState();
-// }
-//
-// class _CustomDropdownExampleState extends State<CustomDropdownExample> {
-//   final SingleSelectController<String?> jobRoleCtrl =
-//   SingleSelectController('');
-//
-//   Future<List<String>> getFakeRequestData(String query) async {
-//     List<String> data = ['Developer', 'Designer', 'Consultant', 'Student'];
-//
-//     return await Future.delayed(const Duration(seconds: 1), () {
-//       return data.where((e) {
-//         return e.toLowerCase().contains(query.toLowerCase());
-//       }).toList();
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return CustomDropdown.searchRequest(
-//       futureRequest: getFakeRequestData,
-//
-//       hintBuilder: (context, hint, enabled) {
-//         return Text(
-//           hint,
-//           style: const TextStyle(color: Colors.black),
-//         );
-//       },
-//       hintText: 'Search job role',
-//
-//       decoration: CustomDropdownDecoration(hintStyle: TextStyle(color: Colors.grey),),
-//       onChanged: (value) {},
-//       controller: jobRoleCtrl,
-//       searchHintText: 'Developer',
-//       futureRequestDelay: const Duration(seconds: 3),
-//     );
-//   }
-// }
 
 
 class CustomDropdownExample extends StatefulWidget {
@@ -226,9 +183,6 @@ class _CustomDropdownExampleState extends State<CustomDropdownExample> {
             searchHintText: 'Medicine name',
             futureRequestDelay: const Duration(seconds: 3),
           
-            // itemToString: (item) {
-            //   return item.tradeName ?? 'No Trade Name';
-            // },
             listItemBuilder: (context, item, isSelected, isHovered) {
               return ListTile(
                 // leading:
@@ -254,7 +208,7 @@ class _CustomDropdownExampleState extends State<CustomDropdownExample> {
  // إذا لم يكن هناك رابط صورة
                 title: Text(item.tradeName ?? 'No Trade Name'),
                 subtitle: Container(
-                    // color: Colors.red,
+                  
                     child: Text("ATC Code: ${item.atcCode1 ?? 'No ATC Code'}",
                       style: TextStyle(fontSize: 12,color: Colors.blueGrey),textAlign: TextAlign.start,)),
               );

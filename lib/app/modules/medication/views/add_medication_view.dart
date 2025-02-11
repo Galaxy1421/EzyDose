@@ -1504,8 +1504,6 @@ class AddMedicationView extends GetView<AddMedicationController> {
   Widget _buildInteractionsSection() {
     Get.put(NewInteractionService());
     final controller = Get.find<AddMedicationController>();
-    //Get.put(NewInteractionResult);
-    //List<NewInteractionResult> interactions = await NewInteractionChecker.checkInteractions111
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1582,53 +1580,6 @@ class AddMedicationView extends GetView<AddMedicationController> {
                 }).toList(),
               );
             }) //
-            // child: Obx(() {
-            //   final newInteractions = controller.newInteractions;
-            //   if (newInteractions.isEmpty) {
-            //     return Center(
-            //       child: Column(
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         children: [
-            //           Icon(
-            //             Icons.check_circle_outline,
-            //             size: 48,
-            //             color: Colors.grey.shade400,
-            //           ),
-            //           const SizedBox(height: 12),
-            //           Text(
-            //             'No interactions'.tr,
-            //             textAlign: TextAlign.center,
-            //             style: GoogleFonts.poppins(
-            //               fontSize: 16,
-            //               color: Colors.grey.shade600,
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     );
-            //   }
-            //
-            //   final newInteractionService = Get.find<NewInteractionService>();
-            //
-            //   // استدعاء الدالة المعدلة
-            //   final result = newInteractionService.findOptimalSchedule(controller.reminders, controller.listFetchAllReminders ?? []);
-            //   final schedule = result['schedule'] as Map<String, List<DateTime>>;
-            //   final interactions = result['interactions'] as List<NewInteractionModel>;
-            //
-            //   // تحديث القائمة في الـ controller
-            //   controller.newInteractions.assignAll(interactions);
-            //
-            //   // تجميع التفاعلات لنفس الدواء
-            //   final groupedInteractions = _groupInteractionsByMedication(newInteractions);
-            //
-            //   return Column(
-            //     children: groupedInteractions.entries.map((entry) {
-            //       final medicationName = entry.key;
-            //       final interactions = entry.value;
-            //       return _buildInteractionItem3(medicationName, interactions, schedule);
-            //     }).toList(),
-            //   );
-            // })
 
             ),
       ],
@@ -1668,7 +1619,7 @@ class AddMedicationView extends GetView<AddMedicationController> {
     final recommendedTimes =
         isNewMedication ? schedule[medicationName] ?? [] : [];
     print("- Building interaction item for: $medicationName\n\n");
-    print("- recommendedTimes: $recommendedTimes\n\n");
+    print("- Safe Times: $recommendedTimes\n\n");
 
     print("\n\n================================\n\n");
 
@@ -1691,7 +1642,7 @@ class AddMedicationView extends GetView<AddMedicationController> {
         case 'minor':
           if (interactionDisplayName != 'High Risk' &&
               interactionDisplayName != 'Moderate Risk') {
-            interactionColor = const Color.fromARGB(255, 228, 208, 26);
+            interactionColor = const Color(0xDFE6D300);
             interactionDisplayName = 'Low Risk';
           }
           break;
@@ -1761,7 +1712,7 @@ class AddMedicationView extends GetView<AddMedicationController> {
                 case 'minor':
                   if (interactionDisplayName2 != 'High Risk' &&
                       interactionDisplayName2 != 'Moderate Risk') {
-                    interactionColor2 = const Color.fromARGB(223, 230, 211, 0);
+                    interactionColor2 = const Color(0xDFE6D300);
                     interactionDisplayName2 = 'Low Risk';
                   }
                   break;

@@ -699,8 +699,8 @@ class AddMedicationController extends GetxController {
                     // عنوان الحوار
                     Text(
                       AppHelper.isArabic
-                          ? "تنبيه: تفاعلات دوائية أو فجوات زمنية"
-                          : "Warning: Drug interactions or time gaps",
+                          ? " تنبيه: فجوات زمنية غير كافية"
+                          : "Warning: Insufficient time gaps",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -729,8 +729,8 @@ class AddMedicationController extends GetxController {
                                   // نص التفاعل
                                   Text(
                                     AppHelper.isArabic
-                                        ? "تفاعل أو فجوة زمنية غير كافية بين:"
-                                        : "Insufficient interaction or time gap between:",
+                                        ? " فجوة زمنية غير كافية بين:"
+                                        : "Insufficient time gap between:",
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,

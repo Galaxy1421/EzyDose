@@ -380,7 +380,7 @@ class NewInteractionChecker {
                                   : 'Potential risks, consult a doctor before taking them together';
                               break;
                             case "Minor":
-                              interactionColor = Colors.yellow;
+                              interactionColor = const Color(0xDFE6D300);
                               interactionLevel = isArabic ? 'مخاطر محتملة' : 'Low Risk';
                               interactionComment = isArabic
                                   ? 'مخاطر محتملة استشر طبيبًا قبل تناولها معًا'
