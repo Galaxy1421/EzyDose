@@ -49,10 +49,10 @@ To install and run the application locally:
 - **Taif Bader Abdullah Altuwaim**
 - **Budoor Ayed Odah Alghamdi**
 
-## Supervisors
+## Supervisor
 - **Dr. Adel Ibrahim Alsalem**
 
-## examiners
+## Examiners
 - **Dr. Maha Alrabiah**
 - **Dr. Abdulaziz Almohaemed**
 
@@ -60,10 +60,8 @@ To install and run the application locally:
 his project is for academic purposes and is the property of Al Imam Muhammad ibn Saud Islamic University. Unauthorized distribution or commercial use is prohibited.
 
 ## Contact
-For inquiries or contributions, please contact:
+For inquiries, please contact:
 - Email: [gessa.1421@icloud.com], [dina1.4075@gmail.com]
 - GitHub Issues: [https://github.com/Galaxy1421/EzyDose/issues](https://github.com/Galaxy1421/EzyDose/issues)
 
----
-Thank you for using Ezy Dose! Your health, our priority.
 
