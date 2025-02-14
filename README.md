@@ -1,16 +1,69 @@
-# reminder
+# Ezy Dose
 
-A new Flutter project.
+## Overview
+Ezy Dose is an innovative mobile application designed to assist patients, particularly the elderly and those with chronic illnesses, in managing their medications efficiently. The app helps users adhere to their medication schedules by sending reminders, tracking inventory, and detecting drug interactions to prevent harmful side effects.
 
-## Getting Started
+## Features
+- **Medication Reminders:** Alerts users to take their medications at scheduled times.
+- **Low Quantity & Expiry Notifications:** Notifies users when medication stock is low or nearing expiration.
+- **Drug Interaction Detection:** Identifies potential interactions between medications.
+- **Personalized Scheduling:** Uses the **Minimum-Cost Flow Algorithm** to optimize medication timing and avoid interactions.
+- **User-Friendly Interface:** Supports Arabic and English for accessibility.
+- **Cross-Platform Compatibility:** Developed using **Flutter** for both iOS and Android.
+- **Cloud-Based Data Management:** Utilizes **Firebase** for real-time data storage and retrieval.
 
-This project is a starting point for a Flutter application.
+## Technologies Used
+- **Frontend:** Flutter (Dart)
+- **Backend & Database:** Firebase Firestore
+- **Algorithm:** Minimum-Cost Flow for medication scheduling
+- **Authentication:** Firebase Authentication
+- **Notifications:** Local and push notifications via Firebase
+- **Version Control:** GitHub
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
+To install and run the application locally:
+1. Clone the repository:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+   git clone https://github.com/Galaxy1421/EzyDose.git
+   cd EzyDose
+  
+2. Install dependencies:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+   flutter pub get
+  
+3. Run the application:
+
+   flutter run
+   
+
+## Usage
+1. **Sign Up / Log In**: Create an account or log in using Firebase Authentication.
+2. **Add Medications**: Enter details like dosage, frequency, and quantity.
+3. **Set Reminders**: Configure notifications for medication intake.
+4. **Monitor Stock & Expiry**: Receive alerts when running low or approaching expiration.
+5. **View Interaction Warnings**: Get notified about potential adverse drug interactions.
+
+## Contributors
+- **Ghaida Bander Ibrahim Alessa**
+- **Dina Ibrahim Shalal Alswailem**
+- **Taif Bader Abdullah Altuwaim**
+- **Budoor Ayed Odah Alghamdi**
+
+## Supervisors
+- **Dr. Adel Ibrahim Alsalem**
+
+## examiners
+- **Dr. Maha Alrabiah**
+- **Dr. Abdulaziz Almohaemed**
+
+## License
+his project is for academic purposes and is the property of Al Imam Muhammad ibn Saud Islamic University. Unauthorized distribution or commercial use is prohibited.
+
+## Contact
+For inquiries or contributions, please contact:
+- Email: [gessa.1421@icloud.com], [dina1.4075@gmail.com]
+- GitHub Issues: [https://github.com/Galaxy1421/EzyDose/issues](https://github.com/Galaxy1421/EzyDose/issues)
+
+---
+Thank you for using Ezy Dose! Your health, our priority.
+
