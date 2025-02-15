@@ -24,15 +24,15 @@ Ezy Dose is an innovative mobile application designed to assist patients, partic
 To install and run the application locally:
 1. Clone the repository:
 
-   git clone https://github.com/Galaxy1421/EzyDose.git
-   cd EzyDose
+   git clone https://github.com/Galaxy1421/EzyDose.git Or manually from GitHub Desktop
   
 2. Install dependencies:
 
+   from file pubspec.yaml
    flutter pub get
   
 3. Run the application:
-
+   
    flutter run
    
 
