@@ -57,11 +57,16 @@ To install and run the application locally:
 - **Dr. Abdulaziz Almohaemed**
 
 ## License
-his project is for academic purposes and is the property of Al Imam Muhammad ibn Saud Islamic University. Unauthorized distribution or commercial use is prohibited.
+This project is for academic purposes and is the property of Al Imam Muhammad ibn Saud Islamic University (IMSIU). Unauthorized distribution or commercial use is prohibited.
 
 ## Contact
 For inquiries, please contact:
-- Email: [gessa.1421@icloud.com], [dina1.4075@gmail.com]
+- Email: 
+- [gessa.1421@icloud.com]
+- [dina1.4075@gmail.com]
+- [budoor.alghamdii@hotmail.com]
+- [Taifaltuwaim@yahoo.com]
+
 - GitHub Issues: [https://github.com/Galaxy1421/EzyDose/issues](https://github.com/Galaxy1421/EzyDose/issues)
 
 
