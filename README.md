@@ -62,7 +62,7 @@ This project is for academic purposes and is the property of Al Imam Muhammad ib
 ## Contact
 For inquiries, please contact:
 - Emails: 
-- Ghaida Alessa: [gessa.1421@icloud.com]
+- Ghaida Alessa: gessa.1421@icloud.com
 - Dina Alswailem: [dina1.4075@gmail.com]
 - Taif Altuwaim: [Taifaltuwaim@yahoo.com]
 - Budoor Alghamdi: [budoor.alghamdii@hotmail.com]
