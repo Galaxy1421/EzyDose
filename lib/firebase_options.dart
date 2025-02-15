@@ -48,15 +48,6 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  // static const FirebaseOptions android = FirebaseOptions(
-  //   apiKey: 'AIzaSyAFjhE4ymCp9Af3H-MISC6E8-I-BQuNVWE',
-  //   appId: '1:988174934427:android:5268bf00615bfcbf0b413e',
-  //   messagingSenderId: '988174934427',
-  //   projectId: 'reminders-5bb06',
-  //   storageBucket: 'reminders-5bb06.firebasestorage.app',
-  // );
-
    static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCzzZpptsbfoJ6Btms17Pid2KCwq6LRX0k',
     appId: '1:69087600407:android:9d2f67cb08b2ef8e1da152',
@@ -64,10 +55,6 @@ class DefaultFirebaseOptions {
     projectId: 'dose-3812e',
     storageBucket: 'dose-3812e.firebasestorage.app',
   );
-
-
-
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBe7rEMU9Mo89y3qJWqhuof3ADuk9NERKw',
     appId: '1:1007026752728:ios:07c1107eac19a1d9a1dbad',
