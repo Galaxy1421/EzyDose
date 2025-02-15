@@ -61,8 +61,8 @@ This project is for academic purposes and is the property of Al Imam Muhammad ib
 
 ## Contact
 For inquiries, please contact:
-- Email: 
--[gessa.1421@icloud.com]
+- Emails: 
+- [gessa.1421@icloud.com]
 - [dina1.4075@gmail.com]
 - [budoor.alghamdii@hotmail.com]
 - [Taifaltuwaim@yahoo.com]
