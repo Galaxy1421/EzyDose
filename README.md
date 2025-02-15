@@ -14,7 +14,7 @@ Ezy Dose is an innovative mobile application designed to assist patients, partic
 
 ## Technologies Used
 - **Frontend:** Flutter (Dart)
-- **Backend & Database:** Firebase Firestore
+- **Backend & Database:** Dart & Firebase Firestore
 - **Algorithm:** Minimum-Cost Flow for medication scheduling
 - **Authentication:** Firebase Authentication
 - **Notifications:** Local and push notifications via Firebase
@@ -28,8 +28,8 @@ To install and run the application locally:
   
 2. Install dependencies:
 
-   from file pubspec.yaml, 
-   flutter pub get
+   - from file pubspec.yaml 
+   - flutter pub get
   
 3. Run the application:
    
