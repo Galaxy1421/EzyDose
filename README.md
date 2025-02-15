@@ -28,7 +28,7 @@ To install and run the application locally:
   
 2. Install dependencies:
 
-   from file pubspec.yaml
+   from file pubspec.yaml, 
    flutter pub get
   
 3. Run the application:
