@@ -62,10 +62,10 @@ This project is for academic purposes and is the property of Al Imam Muhammad ib
 ## Contact
 For inquiries, please contact:
 - Emails: 
-- [gessa.1421@icloud.com]
-- [dina1.4075@gmail.com]
-- [budoor.alghamdii@hotmail.com]
-- [Taifaltuwaim@yahoo.com]
+- Ghaida Alessa: [gessa.1421@icloud.com]
+- Dina Alswailem: [dina1.4075@gmail.com]
+- Taif Altuwaim: [Taifaltuwaim@yahoo.com]
+- Budoor Alghamdi: [budoor.alghamdii@hotmail.com]
 
 - GitHub Issues: [https://github.com/Galaxy1421/EzyDose/issues](https://github.com/Galaxy1421/EzyDose/issues)
 
